@@ -1,26 +1,34 @@
 package fr.esipe.oc3.km.ui;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Vector;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import fr.esipe.agenda.parser.Event;
 import fr.esipe.oc3.km.R;
 
 public class OneWeekView extends Fragment{
 
-	private int currentView;
+	private ArrayList<EventParcelable> eventParce =null;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	
 		/* Getting args from bundle */
 		Bundle data = getArguments();
-		
-		currentView = data.getInt("current_view", 0);
+		eventParce = data.getParcelableArrayList("events");
+		Log.d("KM", (eventParce == null) ? "true": "false");
 	}
 	
 	
@@ -37,19 +45,47 @@ public class OneWeekView extends Fragment{
 		//                { "Goldy", "Bubbles" }
 		//        };
 
-		public MyExpandableListAdapter() {
-			int imax = 5;
-			int jmax = 4;
-			groups = new String[imax];
-			children = new String[imax][jmax];
-			for(int i = 0; i<imax; i++) {
-				groups[i] = "group " + i;
-				for(int j = 0; j< jmax; j++) {
-					if(i == 2) {
-						children[i][j] = "youhou";
-					}
-					children[i][j] = "child " + j;
+		public MyExpandableListAdapter(List<EventParcelable> eventParce) {
+			Calendar cal = Calendar.getInstance();
+			groups = new String[5];
+			children = new String[5][8];
+			int i = 0;
+			Event event = new Event();
+			event.setStartTime(new Date());
+			event.setEndTime(new Date());
+			List<String> labels = new Vector<String>();
+			labels.add("Smartphone");
+			labels.add("Yoann");
+			labels.add("OC3");
+			labels.add("1B15");
+			event.setLabels(labels);
+			List<Event> events = new Vector<Event>();
+			events.add(event);
+			events.add(event);
+			cal.setTime(event.getStartTime());
+			cal.setFirstDayOfWeek(Calendar.MONDAY);
+			for(int k = 0; k< 5;k++)
+			{
+				groups[k] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
+				cal.add(Calendar.DAY_OF_YEAR, 1);
+			}
+			
+			for(EventParcelable ev : eventParce) {
+				cal.setTime(ev.getStartTime());
+//				groups[i] = (String) android.text.format.DateFormat.format("EEEE", ev.getStartTime());
+//				groups[i] = cal.getDisplayName(cal.get(Calendar.DAY_OF_WEEK), Calendar.SHORT, Locale.FRENCH);
+				
+				List<String> labels1 = ev.getLabels();
+				children[i][0] = cal.get(Calendar.HOUR_OF_DAY) + "h" + cal.get(Calendar.MINUTE);
+				for(int j = 0; j < labels1.size() ; j++)
+				{
+					if(!"OC3".equals(labels1.get(j)))
+						children[i][j + 1] = labels1.get(j);
 				}
+				cal.setTime(ev.getEndTime());
+				children[i][labels1.size() + 1] = cal.get(Calendar.HOUR_OF_DAY) + "h" + cal.get(Calendar.MINUTE);
+				
+				i++;
 			}
 		}
 
@@ -70,8 +106,17 @@ public class OneWeekView extends Fragment{
 			View inflatedView = View.inflate(getActivity().getApplicationContext(),
                     R.layout.child_layout, null);
 //            inflatedView.setPadding(50, 0, 0, 0);
-            TextView textView =(TextView)inflatedView.findViewById(R.id.teacher);
-            textView.setText(children[positionGroup][positionChild]);
+			 TextView textView3 =(TextView)inflatedView.findViewById(R.id.start_time);
+	         textView3.setText(children[positionGroup][0]);
+	         TextView textView4 =(TextView)inflatedView.findViewById(R.id.end_time);
+	         textView4.setText(children[positionGroup][5]);
+	        
+			TextView textView =(TextView)inflatedView.findViewById(R.id.classroom);
+            textView.setText(children[positionGroup][4]);
+            TextView textView1 =(TextView)inflatedView.findViewById(R.id.subject);
+            textView1.setText(children[positionGroup][1]);
+            TextView textView2 =(TextView)inflatedView.findViewById(R.id.teacher);
+            textView2.setText(children[positionGroup][2]);
 //
 //			TextView tv = new TextView(CopyOfMyFragment.this.getActivity());
 //			tv.setText(getChild(positionGroup, positionChild).toString());
@@ -82,7 +127,7 @@ public class OneWeekView extends Fragment{
 		@Override
 		public int getChildrenCount(int positionChild) {
 
-			return children[positionChild].length;
+			return 4;
 		}
 
 		@Override
@@ -110,7 +155,7 @@ public class OneWeekView extends Fragment{
 
 			inflatedView.setPadding(100, 20, 0, 20);
 			TextView tv = (TextView) inflatedView.findViewById(R.id.group);
-			tv.setText("coucou");
+			tv.setText(groups[positionGroup]);
 //			TextView tv = new TextView(CopyOfMyFragment.this.getActivity());
 //			tv.setText(getGroup(positionGroup).toString());
 			
@@ -135,7 +180,7 @@ public class OneWeekView extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {		
 		View v = inflater.inflate(R.layout.one_week_layout, container,false);
 		ExpandableListView elv = (ExpandableListView) v.findViewById(R.id.list);
-		elv.setAdapter(new MyExpandableListAdapter());		
+		elv.setAdapter(new MyExpandableListAdapter(eventParce));		
 		return elv;
 
 	}

@@ -4,15 +4,19 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
-import android.app.ProgressDialog;
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 import fr.esipe.agenda.parser.Event;
 import fr.esipe.agenda.parser.Parser;
+import fr.esipe.oc3.km.db.EventHelper;
 import fr.esipe.oc3.km.db.EventProvider;
+import fr.esipe.oc3.km.db.FormationContentProvider;
 
 public class UpdatingDatabaseService extends Service{
 
@@ -20,7 +24,6 @@ public class UpdatingDatabaseService extends Service{
 	private String formationId;
 	private int year;
 	private int weekOfYear;
-	private ProgressDialog dialog;
 	private EventProvider helper;
 	
 	@Override
@@ -46,7 +49,7 @@ public class UpdatingDatabaseService extends Service{
 		year = intent.getIntExtra("year", 2012);
 		weekOfYear = intent.getIntExtra("weekOfYear", 51);
 		Log.d("KM", "before");
-		QueryEventHtmlPlanning recoverEvent = new QueryEventHtmlPlanning();
+		GetEventsFromServer recoverEvent = new GetEventsFromServer();
 		recoverEvent.execute();
 
 		Log.d("KM", "after");
@@ -63,18 +66,44 @@ public class UpdatingDatabaseService extends Service{
 	}
 	
 	public void addingEventDatabase() {
+		Uri mUri = FormationContentProvider.CONTENT_URI;
+
+		String[] columnsLabels = new String[] {
+				EventHelper.TOPIC_NAME_COLUMN,
+				EventHelper.TEACHERS_NAME_COLUMN,
+				EventHelper.CLASSROOM_NAME_COLUMN,
+				EventHelper.BRANCH_NAME_COLUMN,
+				EventHelper.EXAMEN_NAME_COLUMN
+		};
 		for(Event event : listEvent) {
-			if(!helper.exists(event)) {
-				helper.insert(event);
+			ContentValues values = new ContentValues();
+			Cursor cursor = getContentResolver().query(mUri,
+					null, 
+					EventHelper.START_TIME_NAME_COLUMN + "=?",
+					new String[] {String.valueOf(event.getStartTime().getTime())}, 
+					null);
+
+			List<String> labels = event.getLabels();
+			for(int i = 0; i < labels.size(); i++){
+				values.put(columnsLabels[i], labels.get(i));
 			}
-			else {
-				helper.update(event);
+			values.put(EventHelper.FORMATION_ID_NAME_COLUMN, event.getFormationId());
+			values.put(EventHelper.START_TIME_NAME_COLUMN, event.getStartTime().getTime());
+			values.put(EventHelper.END_TIME_NAME_COLUMN, event.getEndTime().getTime());
+
+			if(cursor.getCount() < 1) {
+				getContentResolver().insert(mUri, values);
+			} else {
+				getContentResolver().update(mUri, values,
+						EventHelper.START_TIME_NAME_COLUMN + "=?",
+						new String[] {String.valueOf(event.getStartTime().getTime())});
 			}
+
 		}
 	}
 	
 	
-	private class QueryEventHtmlPlanning extends AsyncTask<String, Void, Boolean> {
+	private class GetEventsFromServer extends AsyncTask<String, Void, Boolean> {
 
 		@Override
 		protected void onPreExecute() {

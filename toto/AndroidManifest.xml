@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="11"
         android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,22 +16,25 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="fr.esipe.oc3.km.MainActivity"
-            android:label="@string/app_name" >
+            android:name="fr.esipe.oc3.km.ui.PlanningActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="FragmentActivity" >
             <intent-filter android:label="@string/app_name" >
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
+                <data android:mimeType="vnd.android.cursor.item/vnd.km.provider.formation" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="fr.esipe.oc3.km.ui.PlanningActivity"
-            android:label="@string/title_activity_planning_activity"
-            android:parentActivityName="FragmentActivity" >
+        <activity android:name="fr.esipe.oc3.km.PlanningPreference" >
         </activity>
 
-        <service 
-            android:name="fr.esipe.oc3.km.UpdatingDatabaseService" >
+        <provider
+            android:name="fr.esipe.oc3.km.db.FormationContentProvider"
+            android:authorities="fr.esipe.oc3.provider.formation" />
+
+        <service android:name="fr.esipe.oc3.km.UpdatingDatabaseService" >
         </service>
     </application>
 

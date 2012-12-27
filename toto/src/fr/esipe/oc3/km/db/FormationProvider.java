@@ -6,12 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import fr.esipe.agenda.parser.Formation;
 
-public class ListFormationProvider {
+public class FormationProvider {
 
-	private final ListFormationHelper helper;
+	private final FormationHelper helper;
 
-	public ListFormationProvider(Context context) {
-		helper = new ListFormationHelper(context);
+	public FormationProvider(Context context) {
+		helper = new FormationHelper(context);
 	}
 
 	/**
@@ -20,7 +20,7 @@ public class ListFormationProvider {
 	 */
 	public Cursor getFormations() {
 		SQLiteDatabase sqLiteDb = helper.getReadableDatabase();
-		String selectQuery = "SELECT  * FROM " + ListFormationHelper.FORMATIONS_TABLE_NAME;
+		String selectQuery = "SELECT  * FROM " + FormationHelper.FORMATIONS_TABLE_NAME;
 		return sqLiteDb.rawQuery(selectQuery, null);
 	}
 
@@ -34,16 +34,16 @@ public class ListFormationProvider {
 
 		ContentValues values = new ContentValues();
 
-		values.put(ListFormationHelper.GROUP_NAME_COLUMN, formation.getGroup());
-		values.put(ListFormationHelper.NAME_NAME_COLUMN, formation.getName());
-		values.put(ListFormationHelper.ID_NAME_COLUMN, formation.getId());
+		values.put(FormationHelper.GROUP_COLUMN, formation.getGroup());
+		values.put(FormationHelper.NAME_COLUMN, formation.getName());
+		values.put(FormationHelper.FORMATION_ID, formation.getId());
 
-		return sqLiteDb.insert(ListFormationHelper.FORMATIONS_TABLE_NAME, null, values);
+		return sqLiteDb.insert(FormationHelper.FORMATIONS_TABLE_NAME, null, values);
 	}
 
 	public long delete(Formation formation){
 		SQLiteDatabase sqLiteDb = helper.getWritableDatabase();
-		return sqLiteDb.delete(ListFormationHelper.FORMATIONS_TABLE_NAME, ListFormationHelper.ID_NAME_COLUMN+ "=? ", new String[] {formation.getId()});
+		return sqLiteDb.delete(FormationHelper.FORMATIONS_TABLE_NAME, FormationHelper.FORMATION_ID+ "=? ", new String[] {formation.getId()});
 	}
 
 	
@@ -57,7 +57,7 @@ public class ListFormationProvider {
 
 			if(c.moveToFirst()) {
 				do {
-				String tmp = c.getString(c.getColumnIndex(ListFormationHelper.ID_NAME_COLUMN));
+				String tmp = c.getString(c.getColumnIndex(FormationHelper.FORMATION_ID));
 
 				if( tmp.equals(id))
 					isPresent = true;
