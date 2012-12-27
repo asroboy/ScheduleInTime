@@ -65,21 +65,44 @@ public class PlanningActivity extends FragmentActivity{
 			FragmentManager fm = getSupportFragmentManager();
 
 			/** Instantiating FragmentPagerAdapter */
+			
+
+			List<Event> events = new Vector<Event>();
+			
 			Event event = new Event();
 			event.setStartTime(new Date());
 			event.setEndTime(new Date());
 			List<String> labels = new Vector<String>();
-			labels.add("Smartphone");
-			labels.add("Yoann");
+			labels.add("Java");
+			labels.add("Duris");
 			labels.add("OC3");
-			labels.add("1B09");
+			labels.add("2B15-28");
+			labels.add("EXAMEN");
 			event.setLabels(labels);
-			List<Event> events = new Vector<Event>();
+			
+			
+			Event event1 = new Event();
+			event1.setStartTime(new Date());
+			event1.setEndTime(new Date());
+			List<String> labels2 = new Vector<String>();
+			labels2.add("Smartphone");
+			labels2.add("Yoann");
+			labels2.add("OC3");
+			labels2.add("1B09");
+			event1.setLabels(labels2);
+			
+			Event event11 = new Event();
+			event11.setStartTime(new Date());
+			event11.setEndTime(new Date());
+			List<String>labels1 = new Vector<String>();
+			labels1.add("RFIP");
+			labels1.add("Paret");
+			labels1.add("OC3");
+			labels1.add("1B15");
+			event11.setLabels(labels1);
 			events.add(event);
-			events.add(event);
-			events.add(event);
-			events.add(event);
-			events.add(event);
+			events.add(event1);
+			events.add(event11);
 			pagerAdapter = new MyFragmentPagerAdapter(fm, events);
 
 			/** Setting the pagerAdapter to the pager object */
