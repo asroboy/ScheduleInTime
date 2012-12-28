@@ -18,12 +18,12 @@ public class EventContentProvider extends ContentProvider{
 	public static final String AUTHORITY = "fr.esipe.oc3.km.provider";
 	
 	
-	public static final Uri CONTENT_URI = Uri.parse("content://fr.esipe.oc3.km.provider");
+	public static final Uri CONTENT_URI = Uri.parse("content://fr.esipe.oc3.km.provider.events");
 	public static final String CONTENT_PROVIDER_ALL_MIME = "vnd.android.cursor.dir/vnd.km.provider.event";
 	public static final String CONTENT_PROVIDER_ONE_MIME = "vnd.android.cursor.item/vnd.km.provider.event";
 
 	private EventHelper helper;
-
+	private SQLiteDatabase eventDb;
 
 	// Constants that differentiate b/w different URI requests
 	private static final int EVENTS   = 1;
@@ -38,11 +38,11 @@ public class EventContentProvider extends ContentProvider{
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 		// a URI that ends in planningevent corresponds to a request
 		// for all events
-		uriMatcher.addURI("fr.esipe.oc3.provider", 
+		uriMatcher.addURI("fr.esipe.oc3.provider.events", 
 				"planningevent", EVENTS);
 		// a URI that ends in "planningevent" with a number
 		// corresponds to a request to retrieve a specific event
-		uriMatcher.addURI("fr.esipe.oc3.provider", 
+		uriMatcher.addURI("fr.esipe.oc3.provider.events", 
 				"planningevent/#", SINGLE_EVENT);
 	}
 
@@ -50,6 +50,7 @@ public class EventContentProvider extends ContentProvider{
 	@Override
 	public boolean onCreate() {
 		helper = new EventHelper(getContext());
+		eventDb = helper.getWritableDatabase();
 		return ( helper == null) ? false : true;
 	}
 
@@ -68,7 +69,6 @@ public class EventContentProvider extends ContentProvider{
 
 	@Override
 	public int delete(Uri uri, String where, String[] whereArgs) {
-		SQLiteDatabase eventDb = helper.getWritableDatabase();
 		long id = getId(uri);
 
 		int count;
@@ -85,7 +85,6 @@ public class EventContentProvider extends ContentProvider{
 			}
 		} finally {
 			getContext().getContentResolver().notifyChange(uri, null);
-			eventDb.close();
 		}
 		return count;
 	}
@@ -104,7 +103,6 @@ public class EventContentProvider extends ContentProvider{
 
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		SQLiteDatabase eventDb = helper.getWritableDatabase();
 
 		long rowId = eventDb.insert(EventHelper.EVENTS_TABLE_NAME, null, values);
 
@@ -115,7 +113,6 @@ public class EventContentProvider extends ContentProvider{
 			}
 		} finally {
 			getContext().getContentResolver().notifyChange(uri, null);
-			eventDb.close();
 		}
 		throw new SQLException("Failed to insert row into " + uri);
 	}
@@ -126,7 +123,6 @@ public class EventContentProvider extends ContentProvider{
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
 		long id = getId(uri);
-		SQLiteDatabase eventDb = helper.getReadableDatabase();
 		try {
 			switch (uriMatcher.match(uri)) {
 			case EVENTS:
@@ -151,7 +147,6 @@ public class EventContentProvider extends ContentProvider{
 	public int update(Uri uri, ContentValues values, String where,
 			String[] whereArgs) {
 
-		SQLiteDatabase eventDb = helper.getWritableDatabase();
 		long id = getId(uri);
 		int count;
 		try {
@@ -169,7 +164,6 @@ public class EventContentProvider extends ContentProvider{
 			}
 		} finally {
 			getContext().getContentResolver().notifyChange(uri, null);
-			eventDb.close();
 		}
 		return count;
 	}

@@ -14,12 +14,13 @@ import android.os.IBinder;
 import android.util.Log;
 import fr.esipe.agenda.parser.Event;
 import fr.esipe.agenda.parser.Parser;
+import fr.esipe.oc3.km.db.EventContentProvider;
 import fr.esipe.oc3.km.db.EventHelper;
 import fr.esipe.oc3.km.db.EventProvider;
-import fr.esipe.oc3.km.db.FormationContentProvider;
 
 public class UpdatingDatabaseService extends Service{
 
+	public static final String DATABASE_UPDATED = "fr.esipe.oc3.km.UpdatingDatabaseService.action.DATABASE_UPDATED";
 	private List<Event> listEvent = null;
 	private String formationId;
 	private int year;
@@ -46,27 +47,26 @@ public class UpdatingDatabaseService extends Service{
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		formationId = intent.getStringExtra("formationId");
-		year = intent.getIntExtra("year", 2012);
+		year = intent.getIntExtra("year", 2013);
 		weekOfYear = intent.getIntExtra("weekOfYear", 51);
 		Log.d("KM", "before");
 		GetEventsFromServer recoverEvent = new GetEventsFromServer();
 		recoverEvent.execute();
 
 		Log.d("KM", "after");
-		//program next wake up
-		stopSelf();
 		return super.onStartCommand(intent, flags, startId);
 	}
 	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		
 		helper.close();
 		Log.d("KM", "finish");
 	}
 	
 	public void addingEventDatabase() {
-		Uri mUri = FormationContentProvider.CONTENT_URI;
+		Uri mUri = EventContentProvider.CONTENT_URI;
 
 		String[] columnsLabels = new String[] {
 				EventHelper.TOPIC_NAME_COLUMN,
@@ -91,7 +91,7 @@ public class UpdatingDatabaseService extends Service{
 			values.put(EventHelper.START_TIME_NAME_COLUMN, event.getStartTime().getTime());
 			values.put(EventHelper.END_TIME_NAME_COLUMN, event.getEndTime().getTime());
 
-			if(cursor.getCount() < 1) {
+			if(cursor == null || cursor.getCount() < 1) {
 				getContentResolver().insert(mUri, values);
 			} else {
 				getContentResolver().update(mUri, values,
@@ -130,6 +130,9 @@ public class UpdatingDatabaseService extends Service{
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 			addingEventDatabase();
+			Intent intent = new Intent(DATABASE_UPDATED);
+			sendBroadcast(intent);
+			stopSelf();
 		}
 		
 	}

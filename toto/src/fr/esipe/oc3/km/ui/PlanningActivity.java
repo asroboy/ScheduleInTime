@@ -9,9 +9,12 @@ import java.util.Vector;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -21,6 +24,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -30,6 +34,7 @@ import fr.esipe.agenda.parser.Formation;
 import fr.esipe.agenda.parser.Parser;
 import fr.esipe.oc3.km.PlanningPreference;
 import fr.esipe.oc3.km.R;
+import fr.esipe.oc3.km.UpdatingDatabaseService;
 import fr.esipe.oc3.km.db.FormationContentProvider;
 import fr.esipe.oc3.km.db.FormationHelper;
 
@@ -38,8 +43,10 @@ public class PlanningActivity extends FragmentActivity{
 	private MyFragmentPagerAdapter pagerAdapter;
 	private List<String> listNameFormation;
 	private List<Formation> listFormation;
+	private Vector<Event>	listEvents;
 	private ProgressDialog dialog;
 	private SharedPreferences preferences;
+	private UpdatingDBServiceReceiver receiver;
 
 
 
@@ -47,9 +54,9 @@ public class PlanningActivity extends FragmentActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		listEvents = new Vector<Event>();
 		preferences = PreferenceManager.getDefaultSharedPreferences(PlanningActivity.this);
 		String formationId = preferences.getString("formationId", null);
-		Toast.makeText(this, formationId, Toast.LENGTH_SHORT).show();
 		listNameFormation = new Vector<String>();
 		
 		
@@ -57,17 +64,7 @@ public class PlanningActivity extends FragmentActivity{
 			// recover the formation to database AsyncTask
 			new GetFormationsFromServer().execute("");
 		} else {
-			setContentView(R.layout.weekviewpager);
-			/** Getting a reference to the ViewPager defined the layout file */
-			ViewPager pager = (ViewPager) findViewById(R.id.pager);
-
-			/** Getting fragment manager */
-			FragmentManager fm = getSupportFragmentManager();
-
-			/** Instantiating FragmentPagerAdapter */
-			
-
-			List<Event> events = new Vector<Event>();
+			displayView();
 			
 			Event event = new Event();
 			event.setStartTime(new Date());
@@ -100,17 +97,11 @@ public class PlanningActivity extends FragmentActivity{
 			labels1.add("OC3");
 			labels1.add("1B15");
 			event11.setLabels(labels1);
-			events.add(event);
-			events.add(event1);
-			events.add(event11);
-			pagerAdapter = new MyFragmentPagerAdapter(fm, events);
-
-			/** Setting the pagerAdapter to the pager object */
-			pager.setAdapter(pagerAdapter);
-			Calendar now = Calendar.getInstance();
-
-			pager.setCurrentItem(now.get(Calendar.WEEK_OF_YEAR));
-
+			listEvents.add(event);
+			listEvents.add(event1);
+			listEvents.add(event11);
+//			listEvents = null;
+			
 		}
 
 
@@ -124,18 +115,103 @@ public class PlanningActivity extends FragmentActivity{
 		//	bouton refresh moving
 		//	Display view
 		//	On result, refresh view
-
-
-
-
-
-
-
-		//		startService(new Intent(this,UpdatingDatabaseService.class));
+		// On current position
+		//    save in database current week, current week -+ 1;
+		// When swiping to right (go backward)
+		//		delete current position +1
+		//			getStartTime
+		//			check if equals to current week +1
+		//				delete row
+		// 		get current position of fragment - 2
+		//      
+		// When swiping to left (go forward)
+		// 		delete current position - 1
+		//			getStartTime
+		//			check if equals to current week -1
+		//				delete row
+		// 		get current position of fragment + 2
+		//     
+		// UpdateView
 
 	}
 
+	public class UpdatingDBServiceReceiver extends BroadcastReceiver {
 
+		@Override
+		public void onReceive(Context context, Intent arg1) {
+			//updateView
+			Toast.makeText(context, "Update finish", Toast.LENGTH_SHORT).show();
+		}
+		
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		IntentFilter filter = new IntentFilter(UpdatingDatabaseService.DATABASE_UPDATED);
+		receiver = new UpdatingDBServiceReceiver();
+		registerReceiver(receiver, filter);
+		
+		startUpdatingDbEventService();
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		unregisterReceiver(receiver);
+	}
+	
+	private void startUpdatingDbEventService() {
+		Intent intent = new Intent(this,UpdatingDatabaseService.class);
+		String formationId = preferences.getString("formationId", null);
+		intent.putExtra("formationId", formationId);
+		intent.putExtra("year", 2013);
+		intent.putExtra("weekOfYear", 2);
+		startService(intent);
+	}
+	
+	
+
+	private void displayView() {
+		setContentView(R.layout.weekviewpager);
+		/** Getting a reference to the ViewPager defined the layout file */
+		ViewPager pager = (ViewPager) findViewById(R.id.pager);
+
+		/** Getting fragment manager */
+		FragmentManager fm = getSupportFragmentManager();
+
+		/** Instantiating FragmentPagerAdapter */
+		SparseArray<Vector<Event>> events = new SparseArray<Vector<Event>>();
+		events.put(52, listEvents);
+		pagerAdapter = new MyFragmentPagerAdapter(fm, events);
+
+		/** Setting the pagerAdapter to the pager object */
+		pager.setAdapter(pagerAdapter);
+		Calendar now = Calendar.getInstance();
+
+		pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		}); 
+		pager.setCurrentItem(now.get(Calendar.WEEK_OF_YEAR));
+	}
 
 	/**
 	 * Check if database is empty
@@ -156,21 +232,21 @@ public class PlanningActivity extends FragmentActivity{
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.title_bar, menu);
 		return true;
 	}
 
-	//Add button refresh, to force launching service
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_search:
 
+			//search week
 			break;
 
 		case R.id.menu_refresh:
+			startUpdatingDbEventService();
 			break;
 
 		case R.id.menu_settings:
@@ -208,8 +284,7 @@ public class PlanningActivity extends FragmentActivity{
 			public void onClick(DialogInterface dialog, int which) {
 				//Saved in preference the formation Id
 				String formationId = listFormation.get(which).getId();
-				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(PlanningActivity.this);
-				SharedPreferences.Editor editor = settings.edit();
+				SharedPreferences.Editor editor = preferences.edit();
 				editor.putString("formationId", formationId);
 				editor.commit();
 

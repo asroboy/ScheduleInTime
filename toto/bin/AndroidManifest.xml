@@ -24,7 +24,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
 
-                <data android:mimeType="vnd.android.cursor.item/vnd.km.provider.formation" />
             </intent-filter>
         </activity>
         <activity android:name="fr.esipe.oc3.km.PlanningPreference" >
@@ -33,6 +32,10 @@
         <provider
             android:name="fr.esipe.oc3.km.db.FormationContentProvider"
             android:authorities="fr.esipe.oc3.provider.formation" />
+        
+        <provider
+            android:name="fr.esipe.oc3.km.db.EventContentProvider"
+            android:authorities="fr.esipe.oc3.km.provider.events" />
 
         <service android:name="fr.esipe.oc3.km.UpdatingDatabaseService" >
         </service>

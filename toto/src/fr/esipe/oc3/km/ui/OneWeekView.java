@@ -32,7 +32,7 @@ public class OneWeekView extends Fragment{
 	public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
 		private String[] groups;
-		SparseArray<Vector<Vector<String>>> dayEvents;
+		private SparseArray<Vector<Vector<String>>> dayEvents;
 
 
 		public MyExpandableListAdapter(List<EventParcelable> eventParce) {
