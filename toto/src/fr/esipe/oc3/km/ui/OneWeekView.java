@@ -18,7 +18,8 @@ import fr.esipe.oc3.km.R;
 
 public class OneWeekView extends Fragment{
 
-	private ArrayList<EventParcelable> eventParce =null;
+	private ArrayList<EventParcelable> eventParce;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,10 +33,15 @@ public class OneWeekView extends Fragment{
 	public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
 		private String[] groups;
-		private SparseArray<Vector<Vector<String>>> dayEvents;
+		private SparseArray<Vector<Vector<String>>> weekEvents;
 
 
-		public MyExpandableListAdapter(List<EventParcelable> eventParce) {
+		/**
+		 * Initialize groups and save all events from a week in e SparseArray
+		 * All event in a day are save in Vector save in weekEvents
+		 * @param eventParceable
+		 */
+		public MyExpandableListAdapter(List<EventParcelable> eventParceable) {
 			Calendar cal = Calendar.getInstance();
 			groups = new String[5];
 			boolean firstInitGroup = true;
@@ -45,46 +51,44 @@ public class OneWeekView extends Fragment{
 			Vector<Vector<String>> wednesdayEvent = new Vector<Vector<String>>();
 			Vector<Vector<String>> thursdayEvent = new Vector<Vector<String>>();
 			Vector<Vector<String>> fridayEvent = new Vector<Vector<String>>();
-			dayEvents = new SparseArray<Vector<Vector<String>>>();
-			
-			
-			
-			for(EventParcelable ev : eventParce){
+			weekEvents = new SparseArray<Vector<Vector<String>>>();
+
+
+			for(EventParcelable ev : eventParceable){
 				cal.setTime(ev.getStartTime());
-				
+
 				if(firstInitGroup) {
 					cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 					groups[Calendar.MONDAY - 2] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
 					cal.setTime(ev.getStartTime());
-					
+
 					cal.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
 					groups[Calendar.TUESDAY - 2] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
 					cal.setTime(ev.getStartTime());
-					
+
 					cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
 					groups[Calendar.WEDNESDAY - 2] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
 					cal.setTime(ev.getStartTime());
-					
+
 					cal.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
 					groups[Calendar.THURSDAY - 2] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
 					cal.setTime(ev.getStartTime());
-					
+
 					cal.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
 					groups[Calendar.FRIDAY - 2] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
 					cal.setTime(ev.getStartTime());
 					firstInitGroup = false;
 				}
-				
-				
+
+
 				mchildren = new Vector<String>();
-				mchildren.add(cal.get(Calendar.HOUR_OF_DAY) + "h" + cal.get(Calendar.MINUTE));
+				mchildren.add((String) android.text.format.DateFormat.format("kk"+ "'h'" + "mm", cal));
 				cal.setTime(ev.getEndTime());
-				mchildren.add(cal.get(Calendar.HOUR_OF_DAY) + "h" + cal.get(Calendar.MINUTE));
+				mchildren.add((String) android.text.format.DateFormat.format("kk"+ "'h'" + "mm", cal));
 				List<String> labels = ev.getLabels();
 				for(String label : labels){
 					mchildren.add(label);
 				}
-				
 				switch (cal.get(Calendar.DAY_OF_WEEK)) {
 				case Calendar.MONDAY:
 					mondayEvent.add(mchildren);
@@ -103,7 +107,8 @@ public class OneWeekView extends Fragment{
 					break;
 
 				case Calendar.FRIDAY:
-					fridayEvent.add(mchildren);
+					if(mchildren.size() >= 6)
+						fridayEvent.add(mchildren);
 					break;
 
 				default:
@@ -111,16 +116,16 @@ public class OneWeekView extends Fragment{
 				}
 			}		
 
-			dayEvents.put(Calendar.MONDAY - 2, mondayEvent);
-			dayEvents.put(Calendar.TUESDAY - 2, tuesdayEvent);
-			dayEvents.put(Calendar.WEDNESDAY - 2, wednesdayEvent);
-			dayEvents.put(Calendar.THURSDAY - 2, thursdayEvent);
-			dayEvents.put(Calendar.FRIDAY - 2, fridayEvent);
+			weekEvents.put(Calendar.MONDAY - 2, mondayEvent);
+			weekEvents.put(Calendar.TUESDAY - 2, tuesdayEvent);
+			weekEvents.put(Calendar.WEDNESDAY - 2, wednesdayEvent);
+			weekEvents.put(Calendar.THURSDAY - 2, thursdayEvent);
+			weekEvents.put(Calendar.FRIDAY - 2, fridayEvent);
 		}
 
 		@Override
 		public Object getChild(int positionGroup, int positionChild) {
-			return dayEvents.get(positionGroup).get(positionChild);
+			return weekEvents.get(positionGroup).get(positionChild);
 		}
 
 		@Override
@@ -128,18 +133,21 @@ public class OneWeekView extends Fragment{
 			return positionChild;
 		}
 
+		/**
+		 * Return view
+		 */
 		@Override
 		public View getChildView(int positionGroup, int positionChild, boolean arg2, View arg3,
 				ViewGroup arg4) {
 
 			View inflatedView = null;
-			Vector<Vector<String>> days = dayEvents.get(positionGroup);
+			Vector<Vector<String>> days = weekEvents.get(positionGroup);
 			Vector<String> mchildren = days.get(positionChild);
 			if (mchildren.size() == 6) {
 				inflatedView = View.inflate(getActivity().getApplicationContext(),
 						R.layout.child_layout, null);
 
-				
+
 				TextView tvStartTime =(TextView)inflatedView.findViewById(R.id.start_time);
 				tvStartTime.setText(mchildren.get(0));
 
@@ -155,48 +163,48 @@ public class OneWeekView extends Fragment{
 				TextView tvClassroom =(TextView)inflatedView.findViewById(R.id.classroom);
 				tvClassroom.setText(mchildren.get(5));
 
-			
+				return inflatedView;
+
 			}
 			else if (mchildren.size() > 6) {
 				//Special view if we have exam or something else like LastProject Reunion
-				inflatedView = View.inflate(getActivity().getApplicationContext(),
+				View inflatedView1 = View.inflate(getActivity().getApplicationContext(),
 						R.layout.special_child_layout, null);
-				
-				TextView tvStartTime =(TextView)inflatedView.findViewById(R.id.start_time_spe);
+
+				TextView tvStartTime =(TextView)inflatedView1.findViewById(R.id.start_time_spe);
 				tvStartTime.setText(mchildren.get(0));
 
-				TextView tvEndTime =(TextView)inflatedView.findViewById(R.id.end_time_spe);
+				TextView tvEndTime =(TextView)inflatedView1.findViewById(R.id.end_time_spe);
 				tvEndTime.setText(mchildren.get(1));
 
-				TextView tvSubject =(TextView)inflatedView.findViewById(R.id.subject_spe);
+				TextView tvSubject =(TextView)inflatedView1.findViewById(R.id.subject_spe);
 				tvSubject.setText(mchildren.get(2));
 
-				TextView tvTeacher =(TextView)inflatedView.findViewById(R.id.teacher_spe);
+				TextView tvTeacher =(TextView)inflatedView1.findViewById(R.id.teacher_spe);
 				tvTeacher.setText(mchildren.get(3));
 
-				TextView tvClassroom =(TextView)inflatedView.findViewById(R.id.classroom_spe);
+				TextView tvClassroom =(TextView)inflatedView1.findViewById(R.id.classroom_spe);
 				tvClassroom.setText(mchildren.get(5));
-				
-				TextView tvExamen =(TextView)inflatedView.findViewById(R.id.type_spe);
+
+				TextView tvExamen =(TextView)inflatedView1.findViewById(R.id.type_spe);
 				tvExamen.setText(mchildren.get(6));
+				return inflatedView1;
 			}
 			return inflatedView;
 		}
 
 		@Override
 		public int getChildrenCount(int positionGroup) {
-			return dayEvents.get(positionGroup).size();
+			return weekEvents.get(positionGroup).size();
 		}
 
 		@Override
 		public Object getGroup(int positionGroup) {
-
 			return groups[positionGroup];
 		}
 
 		@Override
 		public int getGroupCount() {
-
 			return groups.length;
 		}
 
@@ -237,10 +245,4 @@ public class OneWeekView extends Fragment{
 		return elv;
 
 	}
-
-
-
-
-
-
 }

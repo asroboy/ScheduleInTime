@@ -1,7 +1,8 @@
-package fr.esipe.oc3.km.db;
+package fr.esipe.oc3.km.providers;
 
 
 
+import fr.esipe.oc3.km.db.FormationHelper;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;

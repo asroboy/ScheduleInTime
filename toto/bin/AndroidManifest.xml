@@ -29,13 +29,10 @@
         <activity android:name="fr.esipe.oc3.km.PlanningPreference" >
         </activity>
 
+              
         <provider
-            android:name="fr.esipe.oc3.km.db.FormationContentProvider"
-            android:authorities="fr.esipe.oc3.provider.formation" />
-        
-        <provider
-            android:name="fr.esipe.oc3.km.db.EventContentProvider"
-            android:authorities="fr.esipe.oc3.km.provider.events" />
+            android:name="fr.esipe.oc3.km.providers.EventContentProvider"
+            android:authorities="fr.esipe.oc3.km.provider.EventContentProvider" />
 
         <service android:name="fr.esipe.oc3.km.UpdatingDatabaseService" >
         </service>

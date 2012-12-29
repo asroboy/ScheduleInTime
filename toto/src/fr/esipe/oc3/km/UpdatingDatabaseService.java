@@ -14,9 +14,7 @@ import android.os.IBinder;
 import android.util.Log;
 import fr.esipe.agenda.parser.Event;
 import fr.esipe.agenda.parser.Parser;
-import fr.esipe.oc3.km.db.EventContentProvider;
-import fr.esipe.oc3.km.db.EventHelper;
-import fr.esipe.oc3.km.db.EventProvider;
+import fr.esipe.oc3.km.providers.EventContentProvider;
 
 public class UpdatingDatabaseService extends Service{
 
@@ -25,7 +23,6 @@ public class UpdatingDatabaseService extends Service{
 	private String formationId;
 	private int year;
 	private int weekOfYear;
-	private EventProvider helper;
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -36,7 +33,6 @@ public class UpdatingDatabaseService extends Service{
 	public void onCreate() {
 		super.onCreate();
 		Log.d("KM", "service");
-		helper = new EventProvider(getApplicationContext());
 	}
 
 	/**
@@ -61,7 +57,6 @@ public class UpdatingDatabaseService extends Service{
 	public void onDestroy() {
 		super.onDestroy();
 		
-		helper.close();
 		Log.d("KM", "finish");
 	}
 	
@@ -69,17 +64,17 @@ public class UpdatingDatabaseService extends Service{
 		Uri mUri = EventContentProvider.CONTENT_URI;
 
 		String[] columnsLabels = new String[] {
-				EventHelper.TOPIC_NAME_COLUMN,
-				EventHelper.TEACHERS_NAME_COLUMN,
-				EventHelper.CLASSROOM_NAME_COLUMN,
-				EventHelper.BRANCH_NAME_COLUMN,
-				EventHelper.EXAMEN_NAME_COLUMN
+				EventContentProvider.TOPIC_NAME_COLUMN,
+				EventContentProvider.TEACHERS_NAME_COLUMN,
+				EventContentProvider.CLASSROOM_NAME_COLUMN,
+				EventContentProvider.BRANCH_NAME_COLUMN,
+				EventContentProvider.EXAMEN_NAME_COLUMN
 		};
 		for(Event event : listEvent) {
 			ContentValues values = new ContentValues();
 			Cursor cursor = getContentResolver().query(mUri,
 					null, 
-					EventHelper.START_TIME_NAME_COLUMN + "=?",
+					EventContentProvider.START_TIME_NAME_COLUMN + "=?",
 					new String[] {String.valueOf(event.getStartTime().getTime())}, 
 					null);
 
@@ -87,15 +82,16 @@ public class UpdatingDatabaseService extends Service{
 			for(int i = 0; i < labels.size(); i++){
 				values.put(columnsLabels[i], labels.get(i));
 			}
-			values.put(EventHelper.FORMATION_ID_NAME_COLUMN, event.getFormationId());
-			values.put(EventHelper.START_TIME_NAME_COLUMN, event.getStartTime().getTime());
-			values.put(EventHelper.END_TIME_NAME_COLUMN, event.getEndTime().getTime());
+			values.put(EventContentProvider.WEEK_OF_EVENTS, weekOfYear);
+			values.put(EventContentProvider.FORMATION_ID_COLUMN, event.getFormationId());
+			values.put(EventContentProvider.START_TIME_NAME_COLUMN, event.getStartTime().getTime());
+			values.put(EventContentProvider.END_TIME_NAME_COLUMN, event.getEndTime().getTime());
 
 			if(cursor == null || cursor.getCount() < 1) {
 				getContentResolver().insert(mUri, values);
 			} else {
 				getContentResolver().update(mUri, values,
-						EventHelper.START_TIME_NAME_COLUMN + "=?",
+						EventContentProvider.START_TIME_NAME_COLUMN + "=?",
 						new String[] {String.valueOf(event.getStartTime().getTime())});
 			}
 
