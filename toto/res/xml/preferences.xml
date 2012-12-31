@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mypref" >
 
-    <PreferenceCategory android:title="TITLE" >
+    <PreferenceCategory android:title="@string/title_settings" >
         <SwitchPreference
-            android:key="toto"
-            android:summary="tat"
-            android:title="auto Start" />
+            android:key="@string/auto_start_key"
+            android:summary="@string/auto_start_summary"
+            android:title="@string/auto_start_title" />
+        
+         <SwitchPreference
+            android:key="@string/up_calendar_key"
+            android:summary="@string/up_calendar_summary"
+            android:title="@string/up_calendar_title" />
 
         <ListPreference
-            android:dialogTitle="frequency"
-            android:negativeButtonText="Cancel"
+            android:dialogTitle="@string/frequency_diag_title"
+            android:negativeButtonText="@string/frequency_diag_cancel"
             android:entries="@array/update_freq_options"
             android:entryValues="@array/update_freq_values"
-            android:key="titou"
-            android:title="Freq update" />
+            android:key="@string/frequency_key"
+            android:title="@string/frequency_title" />
+        
+         <ListPreference
+            android:dialogTitle="@string/formation_diag_title"
+            android:negativeButtonText="@string/formation_diag_cancel"
+            android:key="@string/formation_key"
+            android:title="@string/formation_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

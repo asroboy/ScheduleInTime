@@ -53,28 +53,34 @@ public class OneWeekView extends Fragment{
 			Vector<Vector<String>> fridayEvent = new Vector<Vector<String>>();
 			weekEvents = new SparseArray<Vector<Vector<String>>>();
 
+			cal.setFirstDayOfWeek(Calendar.MONDAY);
 
 			for(EventParcelable ev : eventParceable){
 				cal.setTime(ev.getStartTime());
-
 				if(firstInitGroup) {
+					
 					cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+					cal.add(Calendar.DAY_OF_YEAR, 7);
 					groups[Calendar.MONDAY - 2] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
 					cal.setTime(ev.getStartTime());
 
 					cal.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+					cal.add(Calendar.DAY_OF_YEAR, 7);
 					groups[Calendar.TUESDAY - 2] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
 					cal.setTime(ev.getStartTime());
 
 					cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+					cal.add(Calendar.DAY_OF_YEAR, 7);
 					groups[Calendar.WEDNESDAY - 2] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
 					cal.setTime(ev.getStartTime());
 
 					cal.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+					cal.add(Calendar.DAY_OF_YEAR, 7);
 					groups[Calendar.THURSDAY - 2] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
 					cal.setTime(ev.getStartTime());
 
 					cal.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+					cal.add(Calendar.DAY_OF_YEAR, 7);
 					groups[Calendar.FRIDAY - 2] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
 					cal.setTime(ev.getStartTime());
 					firstInitGroup = false;

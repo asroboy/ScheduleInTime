@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">toto</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">Schedule In Time</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_search">Search</string>
     <string name="menu_refresh">Refresh</string>
     <string name="menu_about">About us</string>
-    <string name="title_activity_planning_activity">PlanningActivity</string>
+    
+    
+    <!-- Settings -->
+    <string name="title_settings">Global settings</string>
+    
+    	<!-- Settings Formation -->
+    <string name="formation_title">Formation</string>
+    <string name="formation_key">formation_key</string>
+    <string name="formation_diag_title">Choose your formation</string>
+    <string name="formation_diag_cancel">Cancel</string>
+    
+    	<!-- Settings AutoStart -->
+    <string name="auto_start_title">Auto start</string>
+    <string name="auto_start_summary">Refresh planning on boot</string>
+    <string name="auto_start_key">auto_start_key</string>
+    
+   		<!-- Settings Uploading to Calendar -->
+    <string name="up_calendar_title">Upload to calendar</string>
+    <string name="up_calendar_summary">Refresh planning on boot</string>
+    <string name="up_calendar_key">up_calendar_key</string>
+    
+  		<!-- Settings Frequency -->
+    <string name="frequency_title">Synchro Frequency</string>
+    <string name="frequency_summary">Refresh planning on boot</string>
+    <string name="frequency_key">frequency_key</string>
+    <string name="frequency_diag_title">Synchro Frequency</string>
+    <string name="frequency_diag_cancel">Cancel</string>
+    
 
 </resources>

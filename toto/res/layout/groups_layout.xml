@@ -3,7 +3,6 @@
     android:id="@+id/group"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:text="lundi 12 décembre"
 	android:textColor="#000"
 	android:layout_marginLeft="20dp">
 </TextView>

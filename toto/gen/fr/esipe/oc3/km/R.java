@@ -8,11 +8,18 @@
 package fr.esipe.oc3.km;
 
 public final class R {
+    public static final class anim {
+        public static final int popup_hide=0x7f040000;
+        public static final int popup_show=0x7f040001;
+    }
     public static final class array {
-        public static final int update_freq_options=0x7f050000;
-        public static final int update_freq_values=0x7f050001;
+        public static final int update_freq_options=0x7f060000;
+        public static final int update_freq_values=0x7f060001;
     }
     public static final class attr {
+    }
+    public static final class color {
+        public static final int text_color=0x7f070000;
     }
     public static final class drawable {
         public static final int ic_action_about=0x7f020000;
@@ -22,47 +29,73 @@ public final class R {
         public static final int ic_launcher=0x7f020004;
     }
     public static final class id {
-        public static final int button1=0x7f090000;
-        public static final int classroom=0x7f090003;
-        public static final int classroom_spe=0x7f09000a;
-        public static final int end_time=0x7f090002;
-        public static final int end_time_spe=0x7f090009;
-        public static final int group=0x7f090006;
-        public static final int list=0x7f090007;
-        public static final int menu_refresh=0x7f090012;
-        public static final int menu_search=0x7f090011;
-        public static final int menu_settings=0x7f090010;
-        public static final int pager=0x7f09000e;
-        public static final int pager_title_strip=0x7f09000f;
-        public static final int start_time=0x7f090001;
-        public static final int start_time_spe=0x7f090008;
-        public static final int subject=0x7f090004;
-        public static final int subject_spe=0x7f09000c;
-        public static final int teacher=0x7f090005;
-        public static final int teacher_spe=0x7f09000d;
-        public static final int type_spe=0x7f09000b;
+        public static final int classroom=0x7f0b0002;
+        public static final int classroom_spe=0x7f0b0009;
+        public static final int end_time=0x7f0b0001;
+        public static final int end_time_spe=0x7f0b0008;
+        public static final int group=0x7f0b0005;
+        public static final int list=0x7f0b0006;
+        public static final int menu_refresh=0x7f0b0013;
+        public static final int menu_settings=0x7f0b0012;
+        public static final int mypref=0x7f0b0011;
+        public static final int pager=0x7f0b000d;
+        public static final int pager_title_strip=0x7f0b000e;
+        public static final int panel=0x7f0b000f;
+        public static final int start_time=0x7f0b0000;
+        public static final int start_time_spe=0x7f0b0007;
+        public static final int subject=0x7f0b0003;
+        public static final int subject_spe=0x7f0b000b;
+        public static final int teacher=0x7f0b0004;
+        public static final int teacher_spe=0x7f0b000c;
+        public static final int tv=0x7f0b0010;
+        public static final int type_spe=0x7f0b000a;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
-        public static final int child_layout=0x7f030001;
-        public static final int groups_layout=0x7f030002;
-        public static final int one_week_layout=0x7f030003;
-        public static final int special_child_layout=0x7f030004;
-        public static final int weekviewpager=0x7f030005;
+        public static final int action_bar_progress=0x7f030000;
+        public static final int activity_main=0x7f030001;
+        public static final int child_layout=0x7f030002;
+        public static final int groups_layout=0x7f030003;
+        public static final int one_week_layout=0x7f030004;
+        public static final int special_child_layout=0x7f030005;
+        public static final int weekviewpager=0x7f030006;
     }
     public static final class menu {
-        public static final int activity_main=0x7f080000;
-        public static final int title_bar=0x7f080001;
-        public static final int weekviewpager2=0x7f080002;
+        public static final int activity_main=0x7f0a0000;
+        public static final int title_bar=0x7f0a0001;
+        public static final int weekviewpager2=0x7f0a0002;
     }
     public static final class string {
-        public static final int app_name=0x7f060000;
-        public static final int hello_world=0x7f060001;
-        public static final int menu_about=0x7f060005;
-        public static final int menu_refresh=0x7f060004;
-        public static final int menu_search=0x7f060003;
-        public static final int menu_settings=0x7f060002;
-        public static final int title_activity_planning_activity=0x7f060006;
+        public static final int app_name=0x7f080000;
+        public static final int auto_start_key=0x7f08000c;
+        public static final int auto_start_summary=0x7f08000b;
+        /**  Settings AutoStart 
+         */
+        public static final int auto_start_title=0x7f08000a;
+        public static final int formation_diag_cancel=0x7f080009;
+        public static final int formation_diag_title=0x7f080008;
+        public static final int formation_key=0x7f080007;
+        /**  Settings Formation 
+         */
+        public static final int formation_title=0x7f080006;
+        public static final int frequency_diag_cancel=0x7f080014;
+        public static final int frequency_diag_title=0x7f080013;
+        public static final int frequency_key=0x7f080012;
+        public static final int frequency_summary=0x7f080011;
+        /**  Settings Frequency 
+         */
+        public static final int frequency_title=0x7f080010;
+        public static final int menu_about=0x7f080004;
+        public static final int menu_refresh=0x7f080003;
+        public static final int menu_search=0x7f080002;
+        public static final int menu_settings=0x7f080001;
+        /**  Settings 
+         */
+        public static final int title_settings=0x7f080005;
+        public static final int up_calendar_key=0x7f08000f;
+        public static final int up_calendar_summary=0x7f08000e;
+        /**  Settings Uploading to Calendar 
+         */
+        public static final int up_calendar_title=0x7f08000d;
     }
     public static final class style {
         /** 
@@ -86,13 +119,13 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f070000;
+        public static final int AppBaseTheme=0x7f090000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f070001;
+        public static final int AppTheme=0x7f090001;
     }
     public static final class xml {
-        public static final int preferences=0x7f040000;
+        public static final int preferences=0x7f050000;
     }
 }

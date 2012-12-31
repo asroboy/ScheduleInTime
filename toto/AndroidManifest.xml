@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="11"
-        android:targetSdkVersion="16" />
+        android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -34,7 +34,7 @@
             android:name="fr.esipe.oc3.km.providers.EventContentProvider"
             android:authorities="fr.esipe.oc3.km.provider.EventContentProvider" />
 
-        <service android:name="fr.esipe.oc3.km.UpdatingDatabaseService" >
+        <service android:name="fr.esipe.oc3.km.UpdatingEventDbService" >
         </service>
     </application>
 

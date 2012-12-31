@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class FormationHelper extends SQLiteOpenHelper {
 	
 	protected static final int DATABASE_VERSION = 1;
-	protected static final String DATABASE_NAME = "listformation.db";
+	public static final String DATABASE_NAME = "listformation.db";
 	protected static final String FORMATIONS_TABLE_NAME = "formationlist";
 	public static final String KEY_ID = "_id";
 	public static final String GROUP_COLUMN = "groups";
