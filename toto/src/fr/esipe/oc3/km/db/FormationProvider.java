@@ -24,11 +24,11 @@ public class FormationProvider {
 		return sqLiteDb.rawQuery(selectQuery, null);
 	}
 	
-	public Cursor getItemFormation(Formation formation) {
+	public Cursor getItemFormation(String formation) {
 		SQLiteDatabase sqLiteDb = helper.getReadableDatabase();
 		return sqLiteDb.query(FormationHelper.FORMATIONS_TABLE_NAME, null,
-				FormationHelper.FORMATION_ID + " =? ", 
-				new String[] {formation.getId()}, null, null, null);
+				FormationHelper.NAME_COLUMN + " =? ", 
+				new String[] {formation}, null, null, null);
 	}
 
 	/**

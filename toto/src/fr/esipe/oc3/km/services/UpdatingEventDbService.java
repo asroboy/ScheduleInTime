@@ -1,4 +1,4 @@
-package fr.esipe.oc3.km;
+package fr.esipe.oc3.km.services;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import fr.esipe.agenda.parser.Event;
 import fr.esipe.agenda.parser.Parser;
+import fr.esipe.oc3.km.R;
 import fr.esipe.oc3.km.providers.EventContentProvider;
 
 public class UpdatingEventDbService extends Service{
@@ -23,6 +24,7 @@ public class UpdatingEventDbService extends Service{
 	private int year;
 	private int weekOfYear;
 	private boolean delete;
+	private int numberOfWeek;
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -37,10 +39,11 @@ public class UpdatingEventDbService extends Service{
 	 */
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		formationId = intent.getStringExtra("formationId");
-		year = intent.getIntExtra("year", 2012);
-		weekOfYear = intent.getIntExtra("weekOfYear", 51);
-		delete = intent.getBooleanExtra("delete", false);
+		formationId = intent.getStringExtra(getResources().getString(R.string.event_intent_formation_id));
+		year = intent.getIntExtra(getResources().getString(R.string.event_intent_year), 2012);
+		weekOfYear = intent.getIntExtra(getResources().getString(R.string.event_intent_week_of_year), 51);
+		delete = intent.getBooleanExtra(getResources().getString(R.string.event_intent_delete), false);
+		numberOfWeek = intent.getIntExtra(getResources().getString(R.string.event_intent_number_of_week), 6);
 		
 		GetEventsFromServer recoverEvent = new GetEventsFromServer();
 		recoverEvent.execute();
@@ -59,7 +62,8 @@ public class UpdatingEventDbService extends Service{
 		Uri mUri = EventContentProvider.CONTENT_URI;
 
 		if(delete){
-			getContentResolver().delete(mUri, EventContentProvider.WEEK_OF_EVENTS + "=?", new String[]{ String.valueOf(mweekOfyear)});
+			getContentResolver().delete(mUri, EventContentProvider.WEEK_OF_EVENTS + "=? AND NOT "+
+					EventContentProvider.FORMATION_ID_COLUMN + "=?", new String[]{ String.valueOf(mweekOfyear), formationId});
 		}
 		
 		String[] columnsLabels = new String[] {
@@ -114,7 +118,7 @@ public class UpdatingEventDbService extends Service{
 			
 			Parser p = new Parser();
 			try {
-				for(int i = -1; i<5; i++){
+				for(int i = -1; i < numberOfWeek - 1; i++){
 					listEvent = p.parseWeeklyPlanning(formationId, year, weekOfYear + i);
 					addingEventDatabase(listEvent, weekOfYear + i);
 				}

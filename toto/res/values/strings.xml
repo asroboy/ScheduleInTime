@@ -6,33 +6,47 @@
     <string name="menu_search">Search</string>
     <string name="menu_refresh">Refresh</string>
     <string name="menu_about">About us</string>
+
+    <!-- Events -->
+    <string name="event_progress_diag">Downloading events</string>
+    <string name="event_refresh_prog_diag">Refreshing planning</string>
+    <!-- EventIntentExtra -->
+    <string name="event_intent_formation_id">formationId</string>
+    <string name="event_intent_year">year</string>
+    <string name="event_intent_week_of_year">weekOfYear</string>
+    <string name="event_intent_delete">delete</string>
+    <string name="event_intent_number_of_week">numberOfWeek</string>
     
-    
+    <!-- Formation -->
+    <string name="formation_chooser_diag">Select your formation</string>
+    <string name="formation_progress_diag">Downloading formations</string>
+    <!-- FormationIntent -->
+    <string name="formation_intent_list_name">formationsName</string>
+
     <!-- Settings -->
     <string name="title_settings">Global settings</string>
-    
-    	<!-- Settings Formation -->
+
+    <!-- Settings Formation -->
     <string name="formation_title">Formation</string>
     <string name="formation_key">formation_key</string>
     <string name="formation_diag_title">Choose your formation</string>
     <string name="formation_diag_cancel">Cancel</string>
-    
-    	<!-- Settings AutoStart -->
+
+    <!-- Settings AutoStart -->
     <string name="auto_start_title">Auto start</string>
     <string name="auto_start_summary">Refresh planning on boot</string>
     <string name="auto_start_key">auto_start_key</string>
-    
-   		<!-- Settings Uploading to Calendar -->
+
+    <!-- Settings Uploading to Calendar -->
     <string name="up_calendar_title">Upload to calendar</string>
     <string name="up_calendar_summary">Refresh planning on boot</string>
     <string name="up_calendar_key">up_calendar_key</string>
-    
-  		<!-- Settings Frequency -->
+
+    <!-- Settings Frequency -->
     <string name="frequency_title">Synchro Frequency</string>
     <string name="frequency_summary">Refresh planning on boot</string>
     <string name="frequency_key">frequency_key</string>
     <string name="frequency_diag_title">Synchro Frequency</string>
     <string name="frequency_diag_cancel">Cancel</string>
-    
 
 </resources>

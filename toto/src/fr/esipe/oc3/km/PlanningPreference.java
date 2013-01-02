@@ -44,6 +44,7 @@ public class PlanningPreference extends Activity {
 
 			ListPreference frequency_lp = (ListPreference) findPreference(getResources().getString(R.string.frequency_key));
 			frequency_lp.setSummary(frequency_lp.getEntry());
+			frequency_lp.setValueIndex(4);
 		}
 		
 		private CharSequence[] entries() {

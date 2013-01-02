@@ -225,7 +225,8 @@ public class OneWeekView extends Fragment{
 			View inflatedView = View.inflate(getActivity().getApplicationContext(),
 					R.layout.groups_layout, null);
 
-			inflatedView.setPadding(100, 20, 0, 20);
+			inflatedView.setPadding(100, 42, 0, 42);
+			inflatedView.setBackgroundColor(getResources().getColor(R.color.group_background_color));
 			TextView tv = (TextView) inflatedView.findViewById(R.id.group);
 			tv.setText(groups[positionGroup]);
 			return inflatedView;

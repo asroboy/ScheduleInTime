@@ -14,12 +14,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:textColor="@color/child_text_color"
             android:layout_marginLeft="7dp" />
 
         <TextView
             android:id="@+id/end_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/child_text_color"
             android:layout_weight="1" />
 
         <TextView
@@ -28,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
+            android:textColor="@color/child_text_color"
             android:layout_marginRight="7dp" />
     </LinearLayout>
 
@@ -37,6 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_weight="0.3"
+        android:textColor="@color/child_text_color"
         android:gravity="center_horizontal" />
 
     <TextView
@@ -45,6 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="right"
+        android:textColor="@color/child_text_color"
         android:layout_marginRight="7dp" />
 
 </LinearLayout>

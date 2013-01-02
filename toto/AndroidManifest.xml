@@ -9,7 +9,10 @@
         android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+	<uses-permission android:name="android.permission.WRITE_CALENDAR" />
+	
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -23,18 +26,25 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-
             </intent-filter>
         </activity>
         <activity android:name="fr.esipe.oc3.km.PlanningPreference" >
         </activity>
 
-              
+        <receiver android:name="fr.esipe.oc3.km.SyncOnBootReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <provider
             android:name="fr.esipe.oc3.km.providers.EventContentProvider"
             android:authorities="fr.esipe.oc3.km.provider.EventContentProvider" />
 
-        <service android:name="fr.esipe.oc3.km.UpdatingEventDbService" >
+        <service android:name="fr.esipe.oc3.km.services.UpdatingEventDbService" >
+        </service>
+        
+         <service android:name="fr.esipe.oc3.km.services.UpdatingFormationDbService" >
         </service>
     </application>
 

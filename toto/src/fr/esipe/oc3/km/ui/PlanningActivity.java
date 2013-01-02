@@ -29,29 +29,29 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 import fr.esipe.agenda.parser.Event;
-import fr.esipe.agenda.parser.Formation;
 import fr.esipe.oc3.km.PlanningPreference;
 import fr.esipe.oc3.km.R;
-import fr.esipe.oc3.km.UpdatingEventDbService;
-import fr.esipe.oc3.km.UpdatingFormationDbService;
+import fr.esipe.oc3.km.db.FormationHelper;
+import fr.esipe.oc3.km.db.FormationProvider;
 import fr.esipe.oc3.km.providers.EventContentProvider;
+import fr.esipe.oc3.km.services.UpdatingEventDbService;
+import fr.esipe.oc3.km.services.UpdatingFormationDbService;
 
 public class PlanningActivity extends FragmentActivity{
 
-	private static final int PREF_REQUEST = 7;
 	private MyFragmentPagerAdapter pagerAdapter;
-	private List<Formation> listFormation;
 	private SharedPreferences preferences;
 	private UpdatedEventDbServiceReceiver receiverEvent;
 	private UpdatedFormationDbServiceReceiver receiverFormation;
 	private ViewPager pager;
 	private ProgressDialog chargingUi;
+	private Menu menu;
 
 	private int weekOfYear;
 	private int year;
 	private  TransparentPanel popup;
-	private boolean state = false;
 
 
 
@@ -143,11 +143,11 @@ public class PlanningActivity extends FragmentActivity{
 		String formationId = preferences.getString(getResources().getString(R.string.formation_key), null);
 
 		if(formationId == null) {
-			chargingUi = ProgressDialog.show(this, null, "Downloading formation...", true);
+			chargingUi = ProgressDialog.show(this, null, getResources().getString(R.string.formation_progress_diag) + "...", true);
 			chargingUi.setCancelable(false);
 			startUpdatingFormationDbService();
 		} else if (isEmptyDatabase(EventContentProvider.CONTENT_URI, weekOfYear, formationId)) {
-			chargingUi = ProgressDialog.show(this, null, "Downloading planning...", true);
+			chargingUi = ProgressDialog.show(this, null, getResources().getString(R.string.event_progress_diag) + "...", true);
 			chargingUi.setCancelable(false);
 			startUpdatingEventDbService(formationId, year, weekOfYear, true);
 
@@ -189,10 +189,11 @@ public class PlanningActivity extends FragmentActivity{
 	 */
 	private void startUpdatingEventDbService(String formationId, int year, int weekOfYear, boolean delete) {
 		Intent intent = new Intent(this,UpdatingEventDbService.class);
-		intent.putExtra("formationId", formationId);
-		intent.putExtra("year", year);
-		intent.putExtra("weekOfYear", weekOfYear);
-		intent.putExtra("delete", delete);
+		intent.putExtra(getResources().getString(R.string.event_intent_formation_id), formationId);
+		intent.putExtra(getResources().getString(R.string.event_intent_year), year);
+		intent.putExtra(getResources().getString(R.string.event_intent_week_of_year), weekOfYear);
+		intent.putExtra(getResources().getString(R.string.event_intent_delete), delete);
+		intent.putExtra(getResources().getString(R.string.event_intent_number_of_week), 6);
 		startService(intent);
 	}
 
@@ -200,7 +201,8 @@ public class PlanningActivity extends FragmentActivity{
 	 * Start service to update database with current weekOfYear
 	 */
 	private void startUpdatingFormationDbService() {
-		Intent intent = new Intent(this,UpdatingFormationDbService.class);
+		
+		Intent intent = new Intent(PlanningActivity.this,UpdatingFormationDbService.class);
 		startService(intent);
 	}
 
@@ -210,7 +212,9 @@ public class PlanningActivity extends FragmentActivity{
 	public class UpdatedEventDbServiceReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			chargingUi.dismiss();
+			if(chargingUi != null)	
+				chargingUi.dismiss();
+			setRefreshing(false);
 			new UpdatingUiFromDatabase().execute("");
 		}
 	}
@@ -219,9 +223,9 @@ public class PlanningActivity extends FragmentActivity{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			chargingUi.dismiss();
-			List<String> listNameFormation = intent.getStringArrayListExtra("formation");
-			String formationId = showFormationDialog(listNameFormation);
-			startUpdatingEventDbService(formationId, year, weekOfYear, true);
+			List<String> listNameFormation = intent.getStringArrayListExtra(
+					getResources().getString(R.string.formation_intent_list_name));
+			showFormationDialog(listNameFormation);
 		}
 	}
 
@@ -254,6 +258,7 @@ public class PlanningActivity extends FragmentActivity{
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.title_bar, menu);
+		this.menu = menu;
 		return true;
 	}
 
@@ -261,18 +266,16 @@ public class PlanningActivity extends FragmentActivity{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		//		case R.id.menu_search:
-		//			//search week
-		//			break;
 
 		case R.id.menu_refresh:
-			state = !state;
-			setRefreshing(state, item);
-			//			startUpdatingDbEventService();
+			setRefreshing(true);
+			preferences = PreferenceManager.getDefaultSharedPreferences(PlanningActivity.this);
+			String formationId = preferences.getString(getResources().getString(R.string.formation_key), null);
+			startUpdatingEventDbService(formationId, year, weekOfYear, false);
 			break;
 
 		case R.id.menu_settings:
-			startActivityForResult(new Intent(PlanningActivity.this,PlanningPreference.class), PREF_REQUEST);
+			startActivity(new Intent(PlanningActivity.this,PlanningPreference.class));
 			break;
 		default:
 			break;
@@ -281,31 +284,28 @@ public class PlanningActivity extends FragmentActivity{
 	}
 
 
-	private void setRefreshing(boolean refreshing, MenuItem item) {
+	private void setRefreshing(boolean refreshing) {
 
+		MenuItem item = menu.findItem(R.id.menu_refresh);
+		
 		if (refreshing)
 			item.setActionView(R.layout.action_bar_progress);
-		else
+		else {
 			item.setActionView(null);
+			Toast.makeText(PlanningActivity.this, "Database updated", Toast.LENGTH_SHORT).show();
+		}
 	}
 	//--- End Menu -----------
 
 
 
 
-
-
-	//---------------------------------------
-	//	GetFormation
-	//---------------------------------------
-
-
 	/**
 	 * Show dialog to choose formation
 	 */
-	private String showFormationDialog(List<String> listNameFormation) {
+	private void showFormationDialog(final List<String> listNameFormation) {
+		final FormationProvider provider = new FormationProvider(PlanningActivity.this);
 		AlertDialog.Builder builder = new AlertDialog.Builder(PlanningActivity.this);
-		String formationId = null;
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(PlanningActivity.this, android.R.layout.simple_list_item_1, listNameFormation);
 		builder.setTitle("Select your formation");
 		builder.setCancelable(false);
@@ -314,101 +314,25 @@ public class PlanningActivity extends FragmentActivity{
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				//Saved in preference the formation Id
-				String formationId = listFormation.get(which).getId();
+				Cursor c = provider.getItemFormation(listNameFormation.get(which));
+				String formationId = null;
+				if(c != null) {
+					if(c.moveToFirst()) {
+						formationId = c.getString(c.getColumnIndex(FormationHelper.FORMATION_ID));
+					}
+				}
 				SharedPreferences.Editor editor = preferences.edit();
 				editor.putString(getResources().getString(R.string.formation_key), formationId);
 				editor.commit();
-
+				chargingUi = ProgressDialog.show(PlanningActivity.this, null, getResources().getString(R.string.event_progress_diag) + "...", true);
+				chargingUi.setCancelable(false);
+				startUpdatingEventDbService(formationId, year, weekOfYear, true);
 			}
 		});
 		builder.create().show();
-		return formationId;
 	}
 
 
-	//	private class GetFormationsFromServer extends AsyncTask<String, Void, Boolean> {
-	//
-	//		private ProgressDialog dialog;
-	//
-	//		@Override
-	//		protected void onPreExecute() {
-	//			super.onPreExecute();
-	//			dialog = ProgressDialog.show(PlanningActivity.this, 
-	//					"Recover data",
-	//					"Charging in progress...",
-	//					true);
-	//			dialog.setCancelable(false);
-	//		}
-	//
-	//		@Override
-	//		protected Boolean doInBackground(String... param) {
-	//
-	//			Parser p = new Parser();
-	//			try {
-	//				listFormation = p.parseFormationList();
-	//			} catch (MalformedURLException e) {
-	//				e.printStackTrace();
-	//			} catch (IOException e) {
-	//				e.printStackTrace();
-	//			}
-	//			return null;
-	//		}
-	//
-	//		@Override
-	//		protected void onPostExecute(Boolean result) {
-	//			super.onPostExecute(result);
-	//			dialog.dismiss();
-	//			addingFormationToDatabase();
-	//			showFormationDialog();
-	//		}
-	//
-	//	}
-	//
-	//
-	//
-	//	public void addingFormationToDatabase() {
-	//
-	//		FormationProvider provider = new FormationProvider(this);
-	//		//		Uri mUri = FormationContentProvider.CONTENT_URI;
-	//
-	//		for(Formation formation : listFormation) {
-	//
-	//			provider.insert(formation);
-	//			listNameFormation.add(formation.getName());
-	//		}
-	//		provider.close();
-	//
-	//		//			ContentValues values = new ContentValues();
-	//		//			
-	//		//			Cursor cursor = provider.getItemFormation(formation);
-	//		//			Cursor cursor = getContentResolver().query(mUri,
-	//		//					null, 
-	//		//					FormationHelper.FORMATION_ID + "=?",
-	//		//					new String[] {formation.getId()}, 
-	//		//					null);
-	//
-	//		//			values.put(FormationHelper.GROUP_COLUMN, formation.getGroup());
-	//		//			values.put(FormationHelper.NAME_COLUMN, formation.getName());
-	//		//			values.put(FormationHelper.FORMATION_ID, formation.getId());
-	//
-	//		//			if(cursor.getCount() < 1) {
-	//
-	//		//				getContentResolver().insert(mUri, values);
-	//		//			} else {
-	//		//				getContentResolver().update(mUri, values,
-	//		//						FormationHelper.FORMATION_ID + "=?", 
-	//		//						new String[] {formation.getId()});
-	//		//			}
-	//
-	//		// Adding listviewName
-	//
-	//	}
-
-	// -- End formation --------------------
-
-	//---------------------------------------------------------
-	//    Get events from database
-	//---------------------------------------------------------
 
 
 	public class UpdatingUiFromDatabase extends AsyncTask<String, Void, SparseArray<Vector<Event>>> {
@@ -422,8 +346,8 @@ public class PlanningActivity extends FragmentActivity{
 			mUri = EventContentProvider.CONTENT_URI;
 
 			dialog = ProgressDialog.show(PlanningActivity.this, 
-					"Recover data",
-					"Charging in progress...",
+					null,
+					getResources().getString(R.string.event_refresh_prog_diag)+"...",
 					true);
 			dialog.setCancelable(false);
 		}

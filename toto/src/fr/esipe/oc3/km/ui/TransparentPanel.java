@@ -23,15 +23,15 @@ public class TransparentPanel extends LinearLayout {
 
 	private void init() {
 		innerPaint = new Paint();
-//		innerPaint.setARGB(150, 75, 75, 75); //gray
-		innerPaint.setColor(android.graphics.Color.GRAY);
+		innerPaint.setARGB(150, 110, 110, 110); //gray
+//		innerPaint.setColor(android.graphics.Color.GRAY);
 		innerPaint.setAlpha(170);
 		innerPaint.setAntiAlias(true);
 
 		borderPaint = new Paint();
-		borderPaint.setColor(android.graphics.Color.BLACK);
-		borderPaint.setAlpha(225);
-//		borderPaint.setARGB(255, 0, 0, 0);
+//		borderPaint.setColor(android.graphics.Color.BLACK);
+//		borderPaint.setAlpha(225);
+		borderPaint.setARGB(255, 80, 80, 80);
 		borderPaint.setAntiAlias(true);
 		borderPaint.setStyle(Paint.Style.STROKE);
 		borderPaint.setStrokeWidth(7);

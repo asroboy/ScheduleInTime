@@ -18,6 +18,7 @@
             android:negativeButtonText="@string/frequency_diag_cancel"
             android:entries="@array/update_freq_options"
             android:entryValues="@array/update_freq_values"
+            android:defaultValue="8"
             android:key="@string/frequency_key"
             android:title="@string/frequency_title" />
         
