@@ -1,6 +1,7 @@
 package fr.esipe.oc3.km.ui;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -75,9 +76,6 @@ public class PlanningActivity extends FragmentActivity{
 
 		initPopup();
 
-
-		weekOfYear = 41;
-		year = 2012;
 		
 		//			TODO
 		//				Modify year in title_bar
@@ -138,6 +136,10 @@ public class PlanningActivity extends FragmentActivity{
 		IntentFilter filterFormation = new IntentFilter(UpdatingFormationDbService.DATABASE_FORMATIONS_UPDATED);
 		receiverFormation = new UpdatedFormationDbServiceReceiver();
 		registerReceiver(receiverFormation, filterFormation);
+		
+		Calendar now = Calendar.getInstance();
+		year = now.get(Calendar.YEAR);
+		weekOfYear = now.get(Calendar.WEEK_OF_YEAR);
 
 		preferences = PreferenceManager.getDefaultSharedPreferences(PlanningActivity.this);
 		String formationId = preferences.getString(getResources().getString(R.string.formation_key), null);

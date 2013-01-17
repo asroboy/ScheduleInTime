@@ -12,7 +12,7 @@ public class EventParcelable implements Parcelable{
 	private String formationId;
 	private Date startTime;
 	private Date endTime;
-	private List<String> labels = new ArrayList<String>(5);
+	private List<String> labels = new ArrayList<String>();
 
 	public EventParcelable(String formationId, List<String> labels, Date startTime, Date endTime) {
 		this.formationId = formationId;

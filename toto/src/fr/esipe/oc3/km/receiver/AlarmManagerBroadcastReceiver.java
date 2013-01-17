@@ -53,7 +53,6 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver{
 		AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(context, AlarmManagerBroadcastReceiver.class);
 		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
-		//After after 5 seconds
 
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		String frequency = preferences.getString(context.getResources().getString(R.string.frequency_key), null);

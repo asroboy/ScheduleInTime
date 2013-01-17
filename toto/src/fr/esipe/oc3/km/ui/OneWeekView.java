@@ -60,27 +60,27 @@ public class OneWeekView extends Fragment{
 				if(firstInitGroup) {
 					
 					cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-					cal.add(Calendar.DAY_OF_YEAR, 7);
+//					cal.add(Calendar.DAY_OF_YEAR, 7);
 					groups[Calendar.MONDAY - 2] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
 					cal.setTime(ev.getStartTime());
 
 					cal.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
-					cal.add(Calendar.DAY_OF_YEAR, 7);
+//					cal.add(Calendar.DAY_OF_YEAR, 7);
 					groups[Calendar.TUESDAY - 2] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
 					cal.setTime(ev.getStartTime());
 
 					cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
-					cal.add(Calendar.DAY_OF_YEAR, 7);
+//					cal.add(Calendar.DAY_OF_YEAR, 7);
 					groups[Calendar.WEDNESDAY - 2] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
 					cal.setTime(ev.getStartTime());
 
 					cal.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
-					cal.add(Calendar.DAY_OF_YEAR, 7);
+//					cal.add(Calendar.DAY_OF_YEAR, 7);
 					groups[Calendar.THURSDAY - 2] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
 					cal.setTime(ev.getStartTime());
 
 					cal.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
-					cal.add(Calendar.DAY_OF_YEAR, 7);
+//					cal.add(Calendar.DAY_OF_YEAR, 7);
 					groups[Calendar.FRIDAY - 2] = (String) android.text.format.DateFormat.format("EEEE"+ " d " + "MMMM", cal);
 					cal.setTime(ev.getStartTime());
 					firstInitGroup = false;
@@ -169,33 +169,31 @@ public class OneWeekView extends Fragment{
 				TextView tvClassroom =(TextView)inflatedView.findViewById(R.id.classroom);
 				tvClassroom.setText(mchildren.get(5));
 
-				return inflatedView;
-
 			}
 			else if (mchildren.size() > 6) {
 				//Special view if we have exam or something else like LastProject Reunion
-				View inflatedView1 = View.inflate(getActivity().getApplicationContext(),
+				inflatedView = View.inflate(getActivity().getApplicationContext(),
 						R.layout.special_child_layout, null);
 
-				TextView tvStartTime =(TextView)inflatedView1.findViewById(R.id.start_time_spe);
+				TextView tvStartTime =(TextView)inflatedView.findViewById(R.id.start_time_spe);
 				tvStartTime.setText(mchildren.get(0));
 
-				TextView tvEndTime =(TextView)inflatedView1.findViewById(R.id.end_time_spe);
+				TextView tvEndTime =(TextView)inflatedView.findViewById(R.id.end_time_spe);
 				tvEndTime.setText(mchildren.get(1));
 
-				TextView tvSubject =(TextView)inflatedView1.findViewById(R.id.subject_spe);
+				TextView tvSubject =(TextView)inflatedView.findViewById(R.id.subject_spe);
 				tvSubject.setText(mchildren.get(2));
 
-				TextView tvTeacher =(TextView)inflatedView1.findViewById(R.id.teacher_spe);
+				TextView tvTeacher =(TextView)inflatedView.findViewById(R.id.teacher_spe);
 				tvTeacher.setText(mchildren.get(3));
 
-				TextView tvClassroom =(TextView)inflatedView1.findViewById(R.id.classroom_spe);
+				TextView tvClassroom =(TextView)inflatedView.findViewById(R.id.classroom_spe);
 				tvClassroom.setText(mchildren.get(5));
 
-				TextView tvExamen =(TextView)inflatedView1.findViewById(R.id.type_spe);
+				TextView tvExamen =(TextView)inflatedView.findViewById(R.id.type_spe);
 				tvExamen.setText(mchildren.get(6));
-				return inflatedView1;
 			}
+			inflatedView.setBackgroundColor(getResources().getColor(R.color.child_backgroud_color));
 			return inflatedView;
 		}
 
@@ -225,7 +223,7 @@ public class OneWeekView extends Fragment{
 			View inflatedView = View.inflate(getActivity().getApplicationContext(),
 					R.layout.groups_layout, null);
 
-			inflatedView.setPadding(100, 42, 0, 42);
+			inflatedView.setPadding(100, 20, 0, 20);
 			inflatedView.setBackgroundColor(getResources().getColor(R.color.group_background_color));
 			TextView tv = (TextView) inflatedView.findViewById(R.id.group);
 			tv.setText(groups[positionGroup]);

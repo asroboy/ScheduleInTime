@@ -16,7 +16,7 @@
     <string name="event_intent_week_of_year">weekOfYear</string>
     <string name="event_intent_delete">delete</string>
     <string name="event_intent_number_of_week">numberOfWeek</string>
-    
+
     <!-- Formation -->
     <string name="formation_chooser_diag">Select your formation</string>
     <string name="formation_progress_diag">Downloading formations</string>
@@ -25,6 +25,7 @@
 
     <!-- Settings -->
     <string name="title_settings">Global settings</string>
+    <string name="refresh_settings">Refresh settings</string>
 
     <!-- Settings Formation -->
     <string name="formation_title">Formation</string>
@@ -39,7 +40,6 @@
 
     <!-- Settings Uploading to Calendar -->
     <string name="up_calendar_title">Upload to calendar</string>
-    <string name="up_calendar_summary">Refresh planning on boot</string>
     <string name="up_calendar_key">up_calendar_key</string>
 
     <!-- Settings Frequency -->
@@ -48,5 +48,8 @@
     <string name="frequency_key">frequency_key</string>
     <string name="frequency_diag_title">Synchro Frequency</string>
     <string name="frequency_diag_cancel">Cancel</string>
+    <!-- Frequency switch -->
+    <string name="enable_refresh_key">enable_refresh_key</string>
+    <string name="enable_refresh_title">Auto refreshing</string>
 
 </resources>

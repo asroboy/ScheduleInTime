@@ -62,8 +62,8 @@ public class UpdatingEventDbService extends Service{
 		Uri mUri = EventContentProvider.CONTENT_URI;
 
 		if(delete){
-			getContentResolver().delete(mUri, EventContentProvider.WEEK_OF_EVENTS + "=? AND NOT "+
-					EventContentProvider.FORMATION_ID_COLUMN + "=?", new String[]{ String.valueOf(mweekOfyear), formationId});
+			getContentResolver().delete(mUri, " NOT "+
+					EventContentProvider.FORMATION_ID_COLUMN + "=?", new String[]{ formationId });
 		}
 		
 		String[] columnsLabels = new String[] {
