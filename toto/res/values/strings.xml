@@ -6,6 +6,8 @@
     <string name="menu_search">Search</string>
     <string name="menu_refresh">Refresh</string>
     <string name="menu_about">About us</string>
+    <string name="tab_week_view">Week</string>
+    <string name="transparent_panel">back to current week</string>
 
     <!-- Events -->
     <string name="event_progress_diag">Downloading events</string>

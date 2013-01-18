@@ -21,7 +21,7 @@
 
     <fr.esipe.oc3.km.ui.TransparentPanel
         android:id="@+id/panel"
-        android:layout_width="150dp"
+        android:layout_width="190dp"
         android:layout_height="40dp"
         android:layout_gravity="bottom|center"
         android:layout_marginBottom="7dp" >
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
             android:paddingLeft="10dp"
-            android:text="back to current week"
+            android:text="@string/transparent_panel"
             android:textColor="#000000" />
     </fr.esipe.oc3.km.ui.TransparentPanel>
 

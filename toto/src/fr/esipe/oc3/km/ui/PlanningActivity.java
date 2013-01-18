@@ -68,7 +68,7 @@ public class PlanningActivity extends FragmentActivity{
 
 		/** Instantiating FragmentPagerAdapter */
 
-		pagerAdapter = new MyFragmentPagerAdapter(fm);
+		pagerAdapter = new MyFragmentPagerAdapter(this, fm);
 		pagerAdapter.setData(null);
 		/** Setting the pagerAdapter to the pager object */
 		pager.setAdapter(pagerAdapter);
@@ -458,13 +458,13 @@ public class PlanningActivity extends FragmentActivity{
 
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-				Log.d("KM", "" + position + " " + positionOffset + " " + positionOffsetPixels);
+//				Log.d("KM", "" + position + " " + positionOffset + " " + positionOffsetPixels);
 
 			}
 
 			@Override
-			public void onPageScrollStateChanged(int arg0) {
-
+			public void onPageScrollStateChanged(int position) {
+				Log.d("KM", "" + position);
 
 			}
 		}); 

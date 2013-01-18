@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,17 +12,19 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import fr.esipe.agenda.parser.Event;
+import fr.esipe.oc3.km.R;
 
 public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter{
 
 
 	private static int NUMBER_OF_WEEK;
 	private SparseArray<Vector<Event>> events;
+	private Context context;
 
 
-	public MyFragmentPagerAdapter(FragmentManager fm) {
+	public MyFragmentPagerAdapter(Context context, FragmentManager fm) {
 		super(fm);
-		
+		this.context = context;
 	}
 
 	
@@ -74,7 +77,7 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter{
 	/** Returns the title of pages */
 	@Override
 	public CharSequence getPageTitle(int position) {
-		return "week #" + ( position );
+		return  context.getResources().getString(R.string.tab_week_view) + " "+ position;
 	}
 
 }

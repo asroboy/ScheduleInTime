@@ -19,10 +19,14 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
-        public static final int child_text_color=0x7f070000;
-        public static final int group_background_color=0x7f070001;
-        public static final int pager_background_color=0x7f070003;
-        public static final int pager_text_color=0x7f070002;
+        public static final int child_backgroud_color=0x7f070000;
+        public static final int child_text_color=0x7f070001;
+        public static final int group_background_color=0x7f070002;
+        public static final int pager_background_color=0x7f070004;
+        /**      <color name="child_text_color">#424242</color> 
+     <color name="group_background_color">#FF8800</color> 
+         */
+        public static final int pager_text_color=0x7f070003;
     }
     public static final class drawable {
         public static final int ic_action_about=0x7f020000;
@@ -69,54 +73,70 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f080000;
-        public static final int auto_start_key=0x7f080016;
-        public static final int auto_start_summary=0x7f080015;
+        public static final int auto_start_key=0x7f080019;
+        public static final int auto_start_summary=0x7f080018;
         /**  Settings AutoStart 
+ Settings AutoStart 
          */
-        public static final int auto_start_title=0x7f080014;
-        public static final int event_intent_delete=0x7f08000a;
+        public static final int auto_start_title=0x7f080017;
+        /**  Frequency switch 
+ Frequency switch 
+         */
+        public static final int enable_refresh_key=0x7f080021;
+        public static final int enable_refresh_title=0x7f080022;
+        public static final int event_intent_delete=0x7f08000c;
         /**  EventIntentExtra 
+ EventIntentExtra 
          */
-        public static final int event_intent_formation_id=0x7f080007;
-        public static final int event_intent_number_of_week=0x7f08000b;
-        public static final int event_intent_week_of_year=0x7f080009;
-        public static final int event_intent_year=0x7f080008;
+        public static final int event_intent_formation_id=0x7f080009;
+        public static final int event_intent_number_of_week=0x7f08000d;
+        public static final int event_intent_week_of_year=0x7f08000b;
+        public static final int event_intent_year=0x7f08000a;
         /**  Events 
+ Events 
          */
-        public static final int event_progress_diag=0x7f080005;
-        public static final int event_refresh_prog_diag=0x7f080006;
+        public static final int event_progress_diag=0x7f080007;
+        public static final int event_refresh_prog_diag=0x7f080008;
         /**  Formation 
+ Formation 
          */
-        public static final int formation_chooser_diag=0x7f08000c;
-        public static final int formation_diag_cancel=0x7f080013;
-        public static final int formation_diag_title=0x7f080012;
+        public static final int formation_chooser_diag=0x7f08000e;
+        public static final int formation_diag_cancel=0x7f080016;
+        public static final int formation_diag_title=0x7f080015;
         /**  FormationIntent 
+ FormationIntent 
          */
-        public static final int formation_intent_list_name=0x7f08000e;
-        public static final int formation_key=0x7f080011;
-        public static final int formation_progress_diag=0x7f08000d;
+        public static final int formation_intent_list_name=0x7f080010;
+        public static final int formation_key=0x7f080014;
+        public static final int formation_progress_diag=0x7f08000f;
         /**  Settings Formation 
+ Settings Formation 
          */
-        public static final int formation_title=0x7f080010;
-        public static final int frequency_diag_cancel=0x7f08001e;
-        public static final int frequency_diag_title=0x7f08001d;
-        public static final int frequency_key=0x7f08001c;
-        public static final int frequency_summary=0x7f08001b;
+        public static final int formation_title=0x7f080013;
+        public static final int frequency_diag_cancel=0x7f080020;
+        public static final int frequency_diag_title=0x7f08001f;
+        public static final int frequency_key=0x7f08001e;
+        public static final int frequency_summary=0x7f08001d;
         /**  Settings Frequency 
+ Settings Frequency 
          */
-        public static final int frequency_title=0x7f08001a;
+        public static final int frequency_title=0x7f08001c;
         public static final int menu_about=0x7f080004;
         public static final int menu_refresh=0x7f080003;
         public static final int menu_search=0x7f080002;
         public static final int menu_settings=0x7f080001;
+        public static final int refresh_settings=0x7f080012;
+        public static final int tab_week_view=0x7f080005;
         /**  Settings 
+ Settings 
          */
-        public static final int title_settings=0x7f08000f;
-        public static final int up_calendar_key=0x7f080019;
-        public static final int up_calendar_summary=0x7f080018;
+        public static final int title_settings=0x7f080011;
+        public static final int transparent_panel=0x7f080006;
+        public static final int up_calendar_key=0x7f08001b;
         /**  Settings Uploading to Calendar 
+ Settings Uploading to Calendar 
          */
-        public static final int up_calendar_title=0x7f080017;
+        public static final int up_calendar_title=0x7f08001a;
     }
     public static final class style {
         /** 
