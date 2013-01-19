@@ -22,6 +22,10 @@ public class EventParcelable implements Parcelable{
 	}
 
 	public EventParcelable() {
+		this.formationId = "null";
+		this.labels = null;
+		this.startTime = null;
+		this.endTime = null;
 	}
 	
 	public EventParcelable(Parcel in) {
@@ -67,8 +71,8 @@ public class EventParcelable implements Parcelable{
 	public void readFromParcel(Parcel in) {
 		formationId = in.readString();
 		in.readList(labels, null);
-		startTime = new Date(Integer.parseInt(in.readString()));
-		endTime = new Date(Integer.parseInt(in.readString()));
+		startTime = new Date(Long.parseLong(in.readString()));
+		endTime = new Date(Long.parseLong(in.readString()));
 	}
 
 	@Override

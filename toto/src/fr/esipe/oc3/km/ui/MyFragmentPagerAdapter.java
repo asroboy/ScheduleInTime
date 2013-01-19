@@ -62,8 +62,12 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter{
 						event.getEndTime()));
 			}
 		}
+		else {
+			eventsParce.add(new EventParcelable());
+		}
 
 		data.putParcelableArrayList("events", eventsParce);
+		data.putInt("weekOfYear", position);
 		fragment.setArguments(data);
 		return fragment;
 	}

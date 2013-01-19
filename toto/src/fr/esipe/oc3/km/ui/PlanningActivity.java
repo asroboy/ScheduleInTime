@@ -76,7 +76,7 @@ public class PlanningActivity extends FragmentActivity{
 
 		initPopup();
 
-		
+
 		//			TODO
 		//				Modify year in title_bar
 		//				Get Event for current, past and future week (Done)
@@ -107,7 +107,7 @@ public class PlanningActivity extends FragmentActivity{
 
 			@Override
 			public void onClick(View v) {
-				pager.setCurrentItem(weekOfYear - 1);
+				pager.setCurrentItem(weekOfYear);
 
 			}
 		});
@@ -128,7 +128,7 @@ public class PlanningActivity extends FragmentActivity{
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
+
 		IntentFilter filterEvent = new IntentFilter(UpdatingEventDbService.DATABASE_EVENTS_UPDATED);
 		receiverEvent = new UpdatedEventDbServiceReceiver();
 		registerReceiver(receiverEvent, filterEvent);
@@ -136,13 +136,18 @@ public class PlanningActivity extends FragmentActivity{
 		IntentFilter filterFormation = new IntentFilter(UpdatingFormationDbService.DATABASE_FORMATIONS_UPDATED);
 		receiverFormation = new UpdatedFormationDbServiceReceiver();
 		registerReceiver(receiverFormation, filterFormation);
-		
+
 		Calendar now = Calendar.getInstance();
 		year = now.get(Calendar.YEAR);
 		weekOfYear = now.get(Calendar.WEEK_OF_YEAR);
 
+
+
 		preferences = PreferenceManager.getDefaultSharedPreferences(PlanningActivity.this);
 		String formationId = preferences.getString(getResources().getString(R.string.formation_key), null);
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putInt("currPagePosition", weekOfYear);
+		editor.commit();
 
 		if(formationId == null) {
 			chargingUi = ProgressDialog.show(this, null, getResources().getString(R.string.formation_progress_diag) + "...", true);
@@ -151,7 +156,7 @@ public class PlanningActivity extends FragmentActivity{
 		} else if (isEmptyDatabase(EventContentProvider.CONTENT_URI, weekOfYear, formationId)) {
 			chargingUi = ProgressDialog.show(this, null, getResources().getString(R.string.event_progress_diag) + "...", true);
 			chargingUi.setCancelable(false);
-			startUpdatingEventDbService(formationId, year, weekOfYear, true);
+			startUpdatingEventDbService(formationId, year, weekOfYear, true, 6);
 
 		} else {
 			new UpdatingUiFromDatabase().execute("");
@@ -181,21 +186,21 @@ public class PlanningActivity extends FragmentActivity{
 		super.onDestroy();
 	}
 
-	
+
 	//-- end Activity
-	
-	
-	
+
+
+
 	/**
 	 * Start service to update database with current weekOfYear
 	 */
-	private void startUpdatingEventDbService(String formationId, int year, int weekOfYear, boolean delete) {
+	private void startUpdatingEventDbService(String formationId, int year, int weekOfYear, boolean delete, int numberOfWeek) {
 		Intent intent = new Intent(this,UpdatingEventDbService.class);
 		intent.putExtra(getResources().getString(R.string.event_intent_formation_id), formationId);
 		intent.putExtra(getResources().getString(R.string.event_intent_year), year);
 		intent.putExtra(getResources().getString(R.string.event_intent_week_of_year), weekOfYear);
 		intent.putExtra(getResources().getString(R.string.event_intent_delete), delete);
-		intent.putExtra(getResources().getString(R.string.event_intent_number_of_week), 6);
+		intent.putExtra(getResources().getString(R.string.event_intent_number_of_week), numberOfWeek);
 		startService(intent);
 	}
 
@@ -203,7 +208,7 @@ public class PlanningActivity extends FragmentActivity{
 	 * Start service to update database with current weekOfYear
 	 */
 	private void startUpdatingFormationDbService() {
-		
+
 		Intent intent = new Intent(PlanningActivity.this,UpdatingFormationDbService.class);
 		startService(intent);
 	}
@@ -245,7 +250,7 @@ public class PlanningActivity extends FragmentActivity{
 				new String[]{formationId}, null);
 		boolean state = true;
 
-		
+
 		if(cursor != null && cursor.getCount() > 0)
 			state = false;
 
@@ -273,7 +278,7 @@ public class PlanningActivity extends FragmentActivity{
 			setRefreshing(true);
 			preferences = PreferenceManager.getDefaultSharedPreferences(PlanningActivity.this);
 			String formationId = preferences.getString(getResources().getString(R.string.formation_key), null);
-			startUpdatingEventDbService(formationId, year, weekOfYear, false);
+			startUpdatingEventDbService(formationId, year, weekOfYear, false, 6);
 			break;
 
 		case R.id.menu_settings:
@@ -289,7 +294,7 @@ public class PlanningActivity extends FragmentActivity{
 	private void setRefreshing(boolean refreshing) {
 
 		MenuItem item = menu.findItem(R.id.menu_refresh);
-		
+
 		if (refreshing)
 			item.setActionView(R.layout.action_bar_progress);
 		else {
@@ -328,7 +333,7 @@ public class PlanningActivity extends FragmentActivity{
 				editor.commit();
 				chargingUi = ProgressDialog.show(PlanningActivity.this, null, getResources().getString(R.string.event_progress_diag) + "...", true);
 				chargingUi.setCancelable(false);
-				startUpdatingEventDbService(formationId, year, weekOfYear, true);
+				startUpdatingEventDbService(formationId, year, weekOfYear, true, 6);
 			}
 		});
 		builder.create().show();
@@ -432,13 +437,28 @@ public class PlanningActivity extends FragmentActivity{
 		pagerAdapter.setData(result);
 		pagerAdapter.notifyDataSetChanged();
 		pager.setAdapter(pagerAdapter);
-		pager.setCurrentItem(weekOfYear);
+		preferences = PreferenceManager.getDefaultSharedPreferences(PlanningActivity.this);
+		int currpage = preferences.getInt("currPagePosition", weekOfYear);
+		pager.setCurrentItem(currpage);
+
 
 		pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
 			@Override
-			public void onPageSelected(int arg0) {
-				if(arg0 == weekOfYear){
+			public void onPageSelected(int position) {
+
+				SharedPreferences.Editor editor = preferences.edit();
+				editor.putInt("currPagePosition", pager.getCurrentItem());
+				editor.commit();
+
+				int pageCount = pagerAdapter.getCount();
+				if (position == 0){
+					pager.setCurrentItem(pageCount-2,false);
+				} else if (position == pageCount-1){
+					pager.setCurrentItem(1,false);
+				}
+
+				if(position == weekOfYear){
 					popup.startAnimation(AnimationUtils.loadAnimation(PlanningActivity.this, R.anim.popup_hide));
 					popup.setVisibility(View.GONE);
 				}else if(popup.getVisibility() != View.VISIBLE) {
@@ -453,19 +473,35 @@ public class PlanningActivity extends FragmentActivity{
 
 						}
 					});
+					preferences = PreferenceManager.getDefaultSharedPreferences(PlanningActivity.this);
+					String formationId = preferences.getString(getResources().getString(R.string.formation_key), null);
+
+					if (position < weekOfYear){
+
+						setRefreshing(true);
+						startUpdatingEventDbService(formationId, year, position - 1, false, 1);
+					}
+					else {
+						if (position >= weekOfYear + 2) {
+							setRefreshing(true);
+							startUpdatingEventDbService(formationId, year, position, false, 6);
+						}
+
+					}
+
 				}
 			}
 
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//				Log.d("KM", "" + position + " " + positionOffset + " " + positionOffsetPixels);
+				Log.d("KM", "" + position + " " + positionOffset + " " + positionOffsetPixels + " " + pager.getCurrentItem());
+
 
 			}
 
 			@Override
 			public void onPageScrollStateChanged(int position) {
-				Log.d("KM", "" + position);
-
+				//				Log.d("KM", "" + position + " " + pager.getCurrentItem());
 			}
 		}); 
 	}
