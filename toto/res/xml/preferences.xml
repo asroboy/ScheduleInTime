@@ -23,7 +23,7 @@
             android:title="@string/enable_refresh_title" />
 
         <ListPreference
-            android:defaultValue="8"
+            
             android:dependency="@string/enable_refresh_key"
             android:dialogTitle="@string/frequency_diag_title"
             android:entries="@array/update_freq_options"

@@ -7,7 +7,16 @@
     <string name="menu_refresh">Rafraîchir</string>
     <string name="menu_about">A propos</string>
     <string name="tab_week_view">Semaine</string>
-    <string name="transparent_panel">retour à la semaine actuelle </string>
+    <string name="transparent_panel">retour à la semaine en cours </string>
+    <string name="free_time_txt">Pas synchronisé</string>
+    <string name="year_txt">  Année </string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
+    <string name="error_diag_title">Erreur réseau</string>
+    <string name="error_diag_msg">Lancer les paramères ?</string>
+    <string name="database_updated">base mise à jour</string>
+    <string name="entreprise_txt">Entreprise</string>
+    <string name="calendar_updated">Calendrier mise à jour</string>
 
     <!-- Events -->
     <string name="event_progress_diag">Téléchargement des cours</string>

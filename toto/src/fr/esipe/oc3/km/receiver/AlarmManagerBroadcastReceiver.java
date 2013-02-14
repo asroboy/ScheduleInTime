@@ -16,7 +16,7 @@ import fr.esipe.oc3.km.services.UpdatingEventDbService;
 
 public class AlarmManagerBroadcastReceiver extends BroadcastReceiver{
 
-	private static final String TAG_ALARM = "fr.esipe.oc3.km.AlarmManagerBroadcastReceiver";
+	public static final String TAG_ALARM = "fr.esipe.oc3.km.AlarmManagerBroadcastReceiver";
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -32,22 +32,22 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver{
 			int year = now.get(Calendar.YEAR);
 			int weekOfYear = now.get(Calendar.WEEK_OF_YEAR);
 
-
-
 			Intent intentService = new Intent(context, UpdatingEventDbService.class);
 			intentService.putExtra(context.getResources().getString(R.string.event_intent_formation_id), formationId);
 			intentService.putExtra(context.getResources().getString(R.string.event_intent_year), year);
 			intentService.putExtra(context.getResources().getString(R.string.event_intent_week_of_year), weekOfYear);
-			intentService.putExtra(context.getResources().getString(R.string.event_intent_delete), false);
-			context.startActivity(intentService);
-
+			intentService.putExtra(context.getResources().getString(R.string.event_intent_number_of_week), 3);
+			context.startService(intentService);
 		} finally {
 			//release the lock
 			wl.release();
 		}
 	}
 
-
+	/**
+	 * Set alarm
+	 * @param context
+	 */
 	public void SetAlarm(Context context)
 	{
 		AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
@@ -56,14 +56,22 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver{
 
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		String frequency = preferences.getString(context.getResources().getString(R.string.frequency_key), null);
-		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS * Integer.parseInt(frequency) , pi); 
+		if(PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null) {
+			am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS * Integer.parseInt(frequency) , pi); 
+		}
 	}
 
+	/**
+	 * Cancel alarm
+	 * @param context
+	 */
 	public void CancelAlarm(Context context)
 	{
 		Intent intent = new Intent(context, AlarmManagerBroadcastReceiver.class);
 		PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
 		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		alarmManager.cancel(sender);
+		if(PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null) {
+			alarmManager.cancel(sender);
+		}
 	}
 }

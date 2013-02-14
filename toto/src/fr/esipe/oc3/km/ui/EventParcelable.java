@@ -14,6 +14,13 @@ public class EventParcelable implements Parcelable{
 	private Date endTime;
 	private List<String> labels = new ArrayList<String>();
 
+	/**
+	 * Class create for passing data through different fragment class
+	 * @param formationId
+	 * @param labels
+	 * @param startTime
+	 * @param endTime
+	 */
 	public EventParcelable(String formationId, List<String> labels, Date startTime, Date endTime) {
 		this.formationId = formationId;
 		this.labels = labels;
@@ -77,7 +84,6 @@ public class EventParcelable implements Parcelable{
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -85,8 +91,10 @@ public class EventParcelable implements Parcelable{
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(formationId);
 		dest.writeList(labels);
-		dest.writeString(String.valueOf(startTime.getTime()));
-		dest.writeString(String.valueOf(endTime.getTime()));
+		if(startTime != null && endTime != null){
+			dest.writeString(String.valueOf(startTime.getTime()));
+			dest.writeString(String.valueOf(endTime.getTime()));
+		}
 
 	}
 

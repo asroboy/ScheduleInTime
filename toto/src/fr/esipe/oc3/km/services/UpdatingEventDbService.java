@@ -2,13 +2,18 @@ package fr.esipe.oc3.km.services;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
 
 import android.app.Service;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
@@ -23,7 +28,6 @@ public class UpdatingEventDbService extends Service{
 	private String formationId;
 	private int year;
 	private int weekOfYear;
-	private boolean delete;
 	private int numberOfWeek;
 	
 	@Override
@@ -42,11 +46,15 @@ public class UpdatingEventDbService extends Service{
 		formationId = intent.getStringExtra(getResources().getString(R.string.event_intent_formation_id));
 		year = intent.getIntExtra(getResources().getString(R.string.event_intent_year), 2012);
 		weekOfYear = intent.getIntExtra(getResources().getString(R.string.event_intent_week_of_year), 51);
-		delete = intent.getBooleanExtra(getResources().getString(R.string.event_intent_delete), false);
 		numberOfWeek = intent.getIntExtra(getResources().getString(R.string.event_intent_number_of_week), 6);
-		
-		GetEventsFromServer recoverEvent = new GetEventsFromServer();
-		recoverEvent.execute();
+		if(networkIsEnabled()) {
+			GetEventsFromServer recoverEvent = new GetEventsFromServer();
+			recoverEvent.execute();
+		} else {
+			Intent intent2 = new Intent(DATABASE_EVENTS_UPDATED);
+			intent2.putExtra("network", false);
+			sendBroadcast(intent2);
+		}
 
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -58,13 +66,21 @@ public class UpdatingEventDbService extends Service{
 		sendBroadcast(intent);
 	}
 	
+	/**
+	 * Add events in database
+	 * @param listEvents
+	 * @param mweekOfyear
+	 */
 	public void addingEventDatabase(List<Event> listEvents, int mweekOfyear) {
 		Uri mUri = EventContentProvider.CONTENT_URI;
-
-		if(delete){
-			getContentResolver().delete(mUri, " NOT "+
-					EventContentProvider.FORMATION_ID_COLUMN + "=?", new String[]{ formationId });
-		}
+		getContentResolver().delete(mUri, EventContentProvider.FORMATION_ID_COLUMN + "!=?", 
+				new String[] {formationId});
+		
+		getContentResolver().delete(mUri, EventContentProvider.WEEK_OF_EVENTS + "=?",
+				new String[] {String.valueOf(mweekOfyear)});
+		
+		String selection = EventContentProvider.START_TIME_NAME_COLUMN + "=? AND " +
+				EventContentProvider.TOPIC_NAME_COLUMN + "=?";
 		
 		String[] columnsLabels = new String[] {
 				EventContentProvider.TOPIC_NAME_COLUMN,
@@ -73,37 +89,75 @@ public class UpdatingEventDbService extends Service{
 				EventContentProvider.BRANCH_NAME_COLUMN,
 				EventContentProvider.EXAMEN_NAME_COLUMN
 		};
-		
-		for(Event event : listEvents) {
+		if(listEvents.size() == 0) {
 			ContentValues values = new ContentValues();
-			Cursor cursor = getContentResolver().query(mUri,
-					null, 
-					EventContentProvider.START_TIME_NAME_COLUMN + "=?",
-					new String[] {String.valueOf(event.getStartTime().getTime())}, 
-					null);
+			Calendar refHour = Calendar.getInstance();
+			refHour.setFirstDayOfWeek(Calendar.MONDAY);
+			refHour.set(Calendar.WEEK_OF_YEAR, mweekOfyear);
+			refHour.set(Calendar.HOUR_OF_DAY, 6);
+			refHour.set(Calendar.MINUTE, 0);
+			refHour.set(Calendar.SECOND, 0);
+			for(int numberOfDay = 1; numberOfDay < 5 ; numberOfDay++) {
+				
+				values.put(EventContentProvider.WEEK_OF_EVENTS, mweekOfyear);
+				values.put(EventContentProvider.FORMATION_ID_COLUMN, formationId);
+				values.put(EventContentProvider.START_TIME_NAME_COLUMN, String.valueOf(refHour.getTimeInMillis()));
+				List<String> labels = new ArrayList<String>();
+				values.put(EventContentProvider.TOPIC_NAME_COLUMN, labels.add("Entreprise"));
 
-			List<String> labels = event.getLabels();
-			for(int i = 0; i < labels.size(); i++){
-				values.put(columnsLabels[i], labels.get(i));
-			}
-			values.put(EventContentProvider.WEEK_OF_EVENTS, mweekOfyear);
-			values.put(EventContentProvider.FORMATION_ID_COLUMN, event.getFormationId());
-			values.put(EventContentProvider.START_TIME_NAME_COLUMN, event.getStartTime().getTime());
-			values.put(EventContentProvider.END_TIME_NAME_COLUMN, event.getEndTime().getTime());
-			
-			
-			if(cursor == null || cursor.getCount() < 1) {
-				getContentResolver().insert(mUri, values);
-			} else {
-				getContentResolver().update(mUri, values,
-						EventContentProvider.START_TIME_NAME_COLUMN + "=?",
-						new String[] {String.valueOf(event.getStartTime().getTime())});
-			}
+				Cursor cursor = getContentResolver().query(mUri,
+						null, 
+						EventContentProvider.START_TIME_NAME_COLUMN + "=? AND " + EventContentProvider.WEEK_OF_EVENTS + "=?",
+						new String[] {String.valueOf(refHour.getTimeInMillis()), String.valueOf(mweekOfyear)}, 
+						null);
 
+				if(!cursor.moveToFirst()) {
+					getContentResolver().insert(mUri, values);
+				} else {
+					getContentResolver().update(mUri, values,
+							EventContentProvider.START_TIME_NAME_COLUMN + "=? AND " + EventContentProvider.WEEK_OF_EVENTS + "=?",
+							new String[] {String.valueOf(refHour.getTimeInMillis()), String.valueOf(mweekOfyear)});
+				}
+				refHour.add(Calendar.DAY_OF_YEAR, numberOfDay);
+				cursor.close();
+			}
+			
+		} else {
+			
+			for(Event event : listEvents) {
+				ContentValues values = new ContentValues();
+				Cursor cursor = getContentResolver().query(mUri,
+						null, 
+						selection,
+						new String[] {String.valueOf(event.getStartTime().getTime()),event.getLabels().get(0)}, 
+						null);
+
+				List<String> labels = event.getLabels();
+				for(int i = 0; i < labels.size(); i++){
+					values.put(columnsLabels[i], labels.get(i));
+				}
+				values.put(EventContentProvider.WEEK_OF_EVENTS, mweekOfyear);
+				values.put(EventContentProvider.FORMATION_ID_COLUMN, event.getFormationId());
+				values.put(EventContentProvider.START_TIME_NAME_COLUMN, event.getStartTime().getTime());
+				values.put(EventContentProvider.END_TIME_NAME_COLUMN, event.getEndTime().getTime());
+
+				if(!cursor.moveToFirst()) {
+					getContentResolver().insert(mUri, values);
+				} else {
+					getContentResolver().update(mUri, values,
+							selection,
+							new String[] {String.valueOf(event.getStartTime().getTime()), event.getLabels().get(0)});
+				}
+				cursor.close();
+			}
 		}
 	}
 	
-	
+	/**
+	 * Get all events from server
+	 * @author Kevin M
+	 *
+	 */
 	private class GetEventsFromServer extends AsyncTask<String, Void, Boolean> {
 
 		private List<Event> listEvent;
@@ -125,8 +179,9 @@ public class UpdatingEventDbService extends Service{
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
+				
 				e.printStackTrace();
-			}
+			} 
 			return null;
 		}
 		
@@ -135,6 +190,20 @@ public class UpdatingEventDbService extends Service{
 			super.onPostExecute(result);
 			stopSelf();
 		}
-		
+	}
+	
+	/**
+	 * Check the network status
+	 * @return true or false
+	 */
+	public boolean networkIsEnabled() {
+		ConnectivityManager connMgr = (ConnectivityManager) 
+				getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI); 
+		boolean isWifiConn = networkInfo.isConnected();
+		networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		boolean isMobileConn = networkInfo.isConnected();
+
+		return isMobileConn | isWifiConn;
 	}
 }

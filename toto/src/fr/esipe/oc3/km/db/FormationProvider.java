@@ -16,7 +16,7 @@ public class FormationProvider {
 
 	/**
 	 * Return all formations from database
-	 * @return
+	 * @return cursor
 	 */
 	public Cursor getFormations() {
 		SQLiteDatabase sqLiteDb = helper.getReadableDatabase();
@@ -24,6 +24,11 @@ public class FormationProvider {
 		return sqLiteDb.rawQuery(selectQuery, null);
 	}
 	
+	/**
+	 * Get selected formation
+	 * @param formation
+	 * @return cursor
+	 */
 	public Cursor getItemFormation(String formation) {
 		SQLiteDatabase sqLiteDb = helper.getReadableDatabase();
 		return sqLiteDb.query(FormationHelper.FORMATIONS_TABLE_NAME, null,
@@ -34,7 +39,7 @@ public class FormationProvider {
 	/**
 	 * Insert a formation in database
 	 * @param listFormation
-	 * @return
+	 * @return id
 	 */
 	public long insert(Formation formation) {
 		SQLiteDatabase sqLiteDb = helper.getWritableDatabase();
@@ -56,16 +61,24 @@ public class FormationProvider {
 		
 	}
 
+	/**
+	 * Delete selected formation
+	 * @param formation
+	 * @return id
+	 */
 	public long delete(Formation formation){
 		SQLiteDatabase sqLiteDb = helper.getWritableDatabase();
 		return sqLiteDb.delete(FormationHelper.FORMATIONS_TABLE_NAME, FormationHelper.FORMATION_ID+ "=? ", new String[] {formation.getId()});
 	}
 
-	
+	/**
+	 * Check if formation exist in database
+	 * @param id
+	 * @return true or false
+	 */
 	public boolean exists(String id) {
 
 		Cursor c = getFormations();
-		c = getFormations();
 		
 		boolean isPresent = false;
 		if(c.getCount() > 0){
@@ -85,7 +98,6 @@ public class FormationProvider {
 	}
 	
 	public void close() {
-
 		helper.close();
 	}
 

@@ -29,7 +29,11 @@ public class PlanningPreference extends Activity {
 		ft.replace(android.R.id.content, new PreferencePlanning());
 		ft.commit();
 	}
-	
+	/**
+	 * Class to create Preference Activity without deprecated method
+	 * @author Kevin M
+	 *
+	 */
 	public static class PreferencePlanning extends PreferenceFragment implements OnSharedPreferenceChangeListener
 	{
 		@Override
@@ -47,6 +51,11 @@ public class PlanningPreference extends Activity {
 			frequency_lp.setValueIndex(4);
 		}
 		
+		
+		/**
+		 * Get entries for ListPreference
+		 * @return entries
+		 */
 		private CharSequence[] entries() {
 			CharSequence[] entries = new CharSequence[listFormationName.size()];
 			for(int i = 0; i< listFormationName.size(); i++) {
@@ -55,6 +64,10 @@ public class PlanningPreference extends Activity {
 			return entries;
 		}
 		
+		/**
+		 * Get entry values for ListPreference
+		 * @return entryValues
+		 */
 		private CharSequence[] entryValues() {
 			CharSequence[] entryValues = new CharSequence[listFormationId.size()];
 			for(int i = 0; i< listFormationId.size(); i++) {
@@ -62,6 +75,7 @@ public class PlanningPreference extends Activity {
 			}
 			return entryValues;
 		}
+		
 		@Override
 		public void onResume() {
 			super.onResume();
@@ -73,13 +87,17 @@ public class PlanningPreference extends Activity {
 			super.onPause();
 			getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
 		}
+		
 		@Override
 		public void onSharedPreferenceChanged(
 				SharedPreferences sharedPreferences, String key) {
-			updatingSummary(findPreference(key));
-			
+				updatingSummary(findPreference(key));
 		}
 		
+		/**
+		 * Refresh the summary of listpreference
+		 * @param p
+		 */
 		public void updatingSummary(Preference p) {
 			if( p instanceof ListPreference ) {
 				ListPreference lp = (ListPreference) p;
@@ -90,12 +108,13 @@ public class PlanningPreference extends Activity {
 		@Override
 		public void onDestroy() {
 			super.onDestroy();
-			
 		}
-		
-		
 	}
 	
+	/**
+	 * Get formation from database to complete
+	 * ListPreference
+	 */
 	public void getFormation() {
 		FormationProvider provider = new FormationProvider(this);
 		Cursor cursor = provider.getFormations();
@@ -110,8 +129,7 @@ public class PlanningPreference extends Activity {
 			}
 		} finally {
 			provider.close();
+			cursor.close();
 		}
 	}
-
-	
 }

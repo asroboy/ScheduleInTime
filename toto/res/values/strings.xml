@@ -8,7 +8,18 @@
     <string name="menu_about">About us</string>
     <string name="tab_week_view">Week</string>
     <string name="transparent_panel">back to current week</string>
-    <string name="free_time_txt">Free Time</string>
+    <string name="free_time_txt">Not sync</string>
+    <string name="year_txt">  Year </string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="remove_event_txt">Remove all event</string>
+    <string name="error_diag_title">Connectivity error</string>
+    <string name="error_diag_msg">Start parameters?</string>
+    <string name="database_updated">Database updated</string>
+    <string name="entreprise_txt">Entreprise</string>
+    <string name="calendar_updated">Calendar updated</string>
+    
+    <string name="remove_event_key">remove_event_key</string>
 
     <!-- Events -->
     <string name="event_progress_diag">Downloading events</string>

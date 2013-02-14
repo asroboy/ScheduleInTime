@@ -14,8 +14,15 @@ import android.util.SparseArray;
 import fr.esipe.agenda.parser.Event;
 import fr.esipe.oc3.km.R;
 
-public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter{
 
+/**
+ * Fragment adapter of pager adapter
+ * 
+ * Use to set data to each fragment view (OneWeekView)
+ * @author Kevin M
+ *
+ */
+public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter{
 
 	private static int NUMBER_OF_WEEK;
 	private SparseArray<Vector<Event>> events;
@@ -27,18 +34,18 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter{
 		this.context = context;
 	}
 
-	
+	/**
+	 * 
+	 * @param events
+	 */
 	public void setData(SparseArray<Vector<Event>> events) {
 		this.events = events;
 		if(this.events == null)
 			NUMBER_OF_WEEK = 0;
 		else
-			NUMBER_OF_WEEK = 52;
-		
+			NUMBER_OF_WEEK = 54;
 	}
 
-	
-	
 	@Override
 	public int getItemPosition(Object object) {
 		return FragmentPagerAdapter.POSITION_NONE;
@@ -53,9 +60,7 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter{
 		Bundle data = new Bundle();
 		ArrayList<EventParcelable> eventsParce = new ArrayList<EventParcelable>();
 		if(listEvent != null) {
-
 			for(Event event : listEvent) {
-				
 				eventsParce.add(new EventParcelable(event.getFormationId(), 
 						event.getLabels(), 
 						event.getStartTime(), 

@@ -40,6 +40,11 @@ public class UpdatingFormationDbService extends Service {
 	}
 
 
+	/**
+	 * Get List of formation from server
+	 * @author Kevin M
+	 *
+	 */
 	private class GetFormationsFromServer extends AsyncTask<String, Void, List<Formation>> {
 
 
@@ -74,6 +79,10 @@ public class UpdatingFormationDbService extends Service {
 
 
 
+	/**
+	 * Add formations in Database
+	 * @param listFormation
+	 */
 	public void addingFormationToDatabase(List<Formation> listFormation) {
 
 		FormationProvider provider = new FormationProvider(this);
