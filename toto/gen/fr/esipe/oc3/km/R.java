@@ -33,38 +33,42 @@ public final class R {
         public static final int ic_action_refresh=0x7f020001;
         public static final int ic_action_search=0x7f020002;
         public static final int ic_action_settings=0x7f020003;
-        public static final int ic_launcher=0x7f020004;
+        public static final int ic_alerts_and_states_error=0x7f020004;
+        public static final int ic_launcher=0x7f020005;
     }
     public static final class id {
-        public static final int classroom=0x7f0b0002;
-        public static final int classroom_spe=0x7f0b0009;
-        public static final int end_time=0x7f0b0001;
-        public static final int end_time_spe=0x7f0b0008;
-        public static final int group=0x7f0b0005;
-        public static final int list=0x7f0b0006;
-        public static final int menu_refresh=0x7f0b0013;
-        public static final int menu_settings=0x7f0b0012;
-        public static final int mypref=0x7f0b0011;
-        public static final int pager=0x7f0b000d;
-        public static final int pager_title_strip=0x7f0b000e;
-        public static final int panel=0x7f0b000f;
-        public static final int start_time=0x7f0b0000;
-        public static final int start_time_spe=0x7f0b0007;
-        public static final int subject=0x7f0b0003;
-        public static final int subject_spe=0x7f0b000b;
-        public static final int teacher=0x7f0b0004;
-        public static final int teacher_spe=0x7f0b000c;
-        public static final int tv=0x7f0b0010;
-        public static final int type_spe=0x7f0b000a;
+        public static final int classroom=0x7f0b0003;
+        public static final int classroom_spe=0x7f0b000b;
+        public static final int end_time=0x7f0b0002;
+        public static final int end_time_spe=0x7f0b000a;
+        public static final int free_time=0x7f0b0006;
+        public static final int group=0x7f0b0007;
+        public static final int list=0x7f0b0008;
+        public static final int menu_refresh=0x7f0b0015;
+        public static final int menu_settings=0x7f0b0014;
+        public static final int mypref=0x7f0b0013;
+        public static final int pager=0x7f0b000f;
+        public static final int pager_title_strip=0x7f0b0010;
+        public static final int panel=0x7f0b0011;
+        public static final int progressBar1=0x7f0b0000;
+        public static final int start_time=0x7f0b0001;
+        public static final int start_time_spe=0x7f0b0009;
+        public static final int subject=0x7f0b0004;
+        public static final int subject_spe=0x7f0b000d;
+        public static final int teacher=0x7f0b0005;
+        public static final int teacher_spe=0x7f0b000e;
+        public static final int tv=0x7f0b0012;
+        public static final int type_spe=0x7f0b000c;
     }
     public static final class layout {
         public static final int action_bar_progress=0x7f030000;
         public static final int activity_main=0x7f030001;
         public static final int child_layout=0x7f030002;
-        public static final int groups_layout=0x7f030003;
-        public static final int one_week_layout=0x7f030004;
-        public static final int special_child_layout=0x7f030005;
-        public static final int weekviewpager=0x7f030006;
+        public static final int empty_layout=0x7f030003;
+        public static final int groups_layout=0x7f030004;
+        public static final int one_week_layout=0x7f030005;
+        public static final int special_child_layout=0x7f030006;
+        public static final int weekviewpager=0x7f030007;
     }
     public static final class menu {
         public static final int activity_main=0x7f0a0000;
@@ -73,70 +77,81 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f080000;
-        public static final int auto_start_key=0x7f080019;
-        public static final int auto_start_summary=0x7f080018;
+        public static final int auto_start_key=0x7f080024;
+        public static final int auto_start_summary=0x7f080023;
         /**  Settings AutoStart 
  Settings AutoStart 
          */
-        public static final int auto_start_title=0x7f080017;
+        public static final int auto_start_title=0x7f080022;
+        public static final int calendar_updated=0x7f080010;
+        public static final int cancel=0x7f08000a;
+        public static final int database_updated=0x7f08000e;
         /**  Frequency switch 
  Frequency switch 
          */
-        public static final int enable_refresh_key=0x7f080021;
-        public static final int enable_refresh_title=0x7f080022;
-        public static final int event_intent_delete=0x7f08000c;
+        public static final int enable_refresh_key=0x7f08002c;
+        public static final int enable_refresh_title=0x7f08002d;
+        public static final int entreprise_txt=0x7f08000f;
+        public static final int error_diag_msg=0x7f08000d;
+        public static final int error_diag_title=0x7f08000c;
+        public static final int event_intent_delete=0x7f080017;
         /**  EventIntentExtra 
  EventIntentExtra 
          */
-        public static final int event_intent_formation_id=0x7f080009;
-        public static final int event_intent_number_of_week=0x7f08000d;
-        public static final int event_intent_week_of_year=0x7f08000b;
-        public static final int event_intent_year=0x7f08000a;
+        public static final int event_intent_formation_id=0x7f080014;
+        public static final int event_intent_number_of_week=0x7f080018;
+        public static final int event_intent_week_of_year=0x7f080016;
+        public static final int event_intent_year=0x7f080015;
         /**  Events 
  Events 
          */
-        public static final int event_progress_diag=0x7f080007;
-        public static final int event_refresh_prog_diag=0x7f080008;
+        public static final int event_progress_diag=0x7f080012;
+        public static final int event_refresh_prog_diag=0x7f080013;
         /**  Formation 
  Formation 
          */
-        public static final int formation_chooser_diag=0x7f08000e;
-        public static final int formation_diag_cancel=0x7f080016;
-        public static final int formation_diag_title=0x7f080015;
+        public static final int formation_chooser_diag=0x7f080019;
+        public static final int formation_diag_cancel=0x7f080021;
+        public static final int formation_diag_title=0x7f080020;
         /**  FormationIntent 
  FormationIntent 
          */
-        public static final int formation_intent_list_name=0x7f080010;
-        public static final int formation_key=0x7f080014;
-        public static final int formation_progress_diag=0x7f08000f;
+        public static final int formation_intent_list_name=0x7f08001b;
+        public static final int formation_key=0x7f08001f;
+        public static final int formation_progress_diag=0x7f08001a;
         /**  Settings Formation 
  Settings Formation 
          */
-        public static final int formation_title=0x7f080013;
-        public static final int frequency_diag_cancel=0x7f080020;
-        public static final int frequency_diag_title=0x7f08001f;
-        public static final int frequency_key=0x7f08001e;
-        public static final int frequency_summary=0x7f08001d;
+        public static final int formation_title=0x7f08001e;
+        public static final int free_time_txt=0x7f080007;
+        public static final int frequency_diag_cancel=0x7f08002b;
+        public static final int frequency_diag_title=0x7f08002a;
+        public static final int frequency_key=0x7f080029;
+        public static final int frequency_summary=0x7f080028;
         /**  Settings Frequency 
  Settings Frequency 
          */
-        public static final int frequency_title=0x7f08001c;
+        public static final int frequency_title=0x7f080027;
         public static final int menu_about=0x7f080004;
         public static final int menu_refresh=0x7f080003;
         public static final int menu_search=0x7f080002;
         public static final int menu_settings=0x7f080001;
-        public static final int refresh_settings=0x7f080012;
+        public static final int ok=0x7f080009;
+        public static final int refresh_settings=0x7f08001d;
+        public static final int remove_event_key=0x7f080011;
+        public static final int remove_event_txt=0x7f08000b;
         public static final int tab_week_view=0x7f080005;
         /**  Settings 
  Settings 
          */
-        public static final int title_settings=0x7f080011;
+        public static final int title_settings=0x7f08001c;
         public static final int transparent_panel=0x7f080006;
-        public static final int up_calendar_key=0x7f08001b;
+        public static final int up_calendar_key=0x7f080026;
         /**  Settings Uploading to Calendar 
  Settings Uploading to Calendar 
          */
-        public static final int up_calendar_title=0x7f08001a;
+        public static final int up_calendar_title=0x7f080025;
+        public static final int year_txt=0x7f080008;
     }
     public static final class style {
         /** 

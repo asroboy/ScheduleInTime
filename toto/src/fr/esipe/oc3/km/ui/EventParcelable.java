@@ -78,8 +78,10 @@ public class EventParcelable implements Parcelable{
 	public void readFromParcel(Parcel in) {
 		formationId = in.readString();
 		in.readList(labels, null);
-		startTime = new Date(Long.parseLong(in.readString()));
-		endTime = new Date(Long.parseLong(in.readString()));
+		if(startTime != null && endTime != null){
+			startTime = new Date(Long.parseLong(in.readString()));
+			endTime = new Date(Long.parseLong(in.readString()));
+		}
 	}
 
 	@Override
